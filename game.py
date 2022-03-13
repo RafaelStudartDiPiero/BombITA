@@ -42,7 +42,7 @@ class Game:
         dir_images = os.path.join(os.getcwd(), 'images')
         self.dir_audios = os.path.join(os.getcwd(), 'audios')
         # self.spritesheet = os.path.join(dir_images, constantes.SPRITESHEET)
-        self.menu_background = os.path.join(dir_images,MENU_BACKGROUND)
+        self.menu_background = os.path.join(dir_images, MENU_BACKGROUND)
         self.menu_background = pygame.image.load(self.menu_background).convert()
         self.menu_background = pygame.transform.scale(self.menu_background,
                                                       (WIDTH, HEIGHT))
