@@ -1,3 +1,5 @@
+import pygame
+vector = pygame.math.Vector2
 # Screen Constants
 
 WIDTH = 800
@@ -21,5 +23,7 @@ WHITE = (255, 255, 255)
 GREY = (190, 190, 190)
 
 # Player Constants
+PLAYER_START_POS = vector(5,5)
+
 
 # Enemy Constants

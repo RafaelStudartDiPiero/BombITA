@@ -2,7 +2,7 @@ import pygame
 import sys
 import os
 from constants import *
-import sprites
+from player import *
 
 
 class Game:
@@ -19,6 +19,7 @@ class Game:
         self.load_files()
         self.cell_width = WIDTH//X_CELLS
         self.cell_height = HEIGHT//Y_CELLS
+        self.player = Player(self, PLAYER_START_POS)
 
     def run(self):
         """"""
@@ -123,13 +124,26 @@ class Game:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.is_running = False
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                self.player.drop_bomb()
+
+        if pygame.key.get_pressed()[pygame.K_w]:
+            self.player.move(vector(0,-1))
+        elif pygame.key.get_pressed()[pygame.K_s]:
+            self.player.move(vector(0, 1))
+        elif pygame.key.get_pressed()[pygame.K_a]:
+            self.player.move(vector(-1, 0))
+        elif pygame.key.get_pressed()[pygame.K_d]:
+            self.player.move(vector(1, 0))
+        else:
+            self.player.move(vector(0, 0))
 
     def single_update(self):
-        """"""
-        pass
+        self.player.update()
 
     def single_draw(self):
         """"""
         self.window.blit(self.single_background, (0, 0))
         self.draw_grid()
+        self.player.draw()
         pygame.display.update()
