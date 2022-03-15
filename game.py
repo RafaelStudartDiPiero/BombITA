@@ -20,6 +20,8 @@ class Game:
         self.cell_width = WIDTH//X_CELLS
         self.cell_height = HEIGHT//Y_CELLS
         self.player = Player(self, PLAYER_START_POS)
+        self.all_sprites = pygame.sprite.Group()
+        self.all_sprites.add(self.player)
 
     def run(self):
         """"""
@@ -128,15 +130,15 @@ class Game:
                 self.player.drop_bomb()
 
         if pygame.key.get_pressed()[pygame.K_w]:
-            self.player.move(vector(0,-1))
+            self.player.move(vector(0,-1), 0)
         elif pygame.key.get_pressed()[pygame.K_s]:
-            self.player.move(vector(0, 1))
+            self.player.move(vector(0, 1), 2)
         elif pygame.key.get_pressed()[pygame.K_a]:
-            self.player.move(vector(-1, 0))
+            self.player.move(vector(-1, 0), 3)
         elif pygame.key.get_pressed()[pygame.K_d]:
-            self.player.move(vector(1, 0))
+            self.player.move(vector(1, 0), 1)
         else:
-            self.player.move(vector(0, 0))
+            self.player.move(vector(0, 0), 0)
 
     def single_update(self):
         self.player.update()
@@ -146,4 +148,5 @@ class Game:
         self.window.blit(self.single_background, (0, 0))
         self.draw_grid()
         self.player.draw()
+        self.all_sprites.draw(self.window)
         pygame.display.update()
