@@ -16,12 +16,15 @@ class Game:
         self.is_running = True
         self.state = 'menu'
         self.menu_options = 0
+        self.walls = []
         self.load_files()
         self.cell_width = WIDTH//X_CELLS
         self.cell_height = HEIGHT//Y_CELLS
         self.player = Player(self, PLAYER_START_POS)
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
+        self.rect_walls = []
+        self.bool = False
 
     def run(self):
         """"""
@@ -54,6 +57,13 @@ class Game:
         self.single_background = pygame.transform.scale(self.single_background,
                                                         (WIDTH, HEIGHT))
 
+        #creating list with the grid positions that have walls
+        with open(os.path.join(os.getcwd(),'walls.txt'), 'r') as file:
+            for y, line in enumerate(file):
+                for x, char in enumerate(line):
+                    if char == '1':
+                        self.walls.append(vector(x,y))
+
     def write_text(self, window, size, color, font_name, msg, position):
         """"""
         font = pygame.font.SysFont(font_name, size)
@@ -70,6 +80,10 @@ class Game:
         for y in range(Y_CELLS):
             pygame.draw.line(self.window, GREY, (0, y * self.cell_height),
                              (WIDTH, y * self.cell_height))
+
+        for wall in self.walls:
+            self.rect_walls.append(pygame.draw.rect(self.single_background, "red", (wall.x*self.cell_width,
+                             wall.y*self.cell_height,self.cell_width, self.cell_height)))
 
 # ----------------------------- INTRO FUNCTIONS ------------------------------------------
 
@@ -139,6 +153,19 @@ class Game:
             self.player.move(vector(1, 0), 1)
         else:
             self.player.move(vector(0, 0), 0)
+
+        self.bool = False
+        for rect in self.rect_walls:
+            if self.player.base_rect.colliderect(rect):
+                self.player.ban_direction()
+                self.player.blocked = True
+                self.bool = True
+
+        if not self.bool:
+            self.player.blocked = False
+            self.player.banned_direction = vector(1,1)
+
+
 
     def single_update(self):
         self.player.update()
