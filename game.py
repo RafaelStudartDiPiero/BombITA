@@ -3,6 +3,7 @@ import sys
 import os
 from constants import *
 from player import *
+import math
 
 
 class Game:
@@ -23,7 +24,6 @@ class Game:
         self.player = Player(self, PLAYER_START_POS)
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
-        self.rect_walls = []
         self.bool = False
 
     def run(self):
@@ -47,7 +47,6 @@ class Game:
         """"""
         dir_images = os.path.join(os.getcwd(), 'images')
         self.dir_audios = os.path.join(os.getcwd(), 'audios')
-        # self.spritesheet = os.path.join(dir_images, constantes.SPRITESHEET)
         self.menu_background = os.path.join(dir_images, MENU_BACKGROUND)
         self.menu_background = pygame.image.load(self.menu_background).convert()
         self.menu_background = pygame.transform.scale(self.menu_background,
@@ -81,9 +80,6 @@ class Game:
             pygame.draw.line(self.window, GREY, (0, y * self.cell_height),
                              (WIDTH, y * self.cell_height))
 
-        for wall in self.walls:
-            self.rect_walls.append(pygame.draw.rect(self.single_background, "red", (wall.x*self.cell_width,
-                             wall.y*self.cell_height,self.cell_width, self.cell_height)))
 
 # ----------------------------- INTRO FUNCTIONS ------------------------------------------
 
@@ -155,8 +151,11 @@ class Game:
             self.player.move(vector(0, 0), 0)
 
         self.bool = False
-        for rect in self.rect_walls:
-            if self.player.base_rect.colliderect(rect):
+        for wall in self.walls:
+            dist_x = abs((wall.x + 1/2)*self.cell_width - self.player.pix_pos.x)
+            dist_y = abs((wall.y+ 1/2)*self.cell_height - (self.player.pix_pos.y + 20))
+
+            if dist_x < self.cell_width*3/5 and dist_y < self.cell_height*3/5:
                 self.player.ban_direction()
                 self.player.blocked = True
                 self.bool = True
@@ -169,6 +168,7 @@ class Game:
 
     def single_update(self):
         self.player.update()
+        print(self.clock.get_fps())
 
     def single_draw(self):
         """"""

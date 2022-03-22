@@ -38,7 +38,7 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         if self.direction != self.banned_direction:
             self.pix_pos += self.direction*2
-        print(self.banned_direction)
+        
         if self.bomb_time < 4*FPS:
             self.bomb_time += 1
         else:
@@ -59,8 +59,6 @@ class Player(pygame.sprite.Sprite):
 
 
     def draw(self):
-        self.base_rect = pygame.draw.rect(self.game.window, 'red', (int(self.pix_pos.x) - 9, int(self.pix_pos.y) + 10,
-                           (self.game.cell_width - 5) // 2, (self.game.cell_height - 5) // 2))
         if self.dropped == True:
             pygame.draw.circle(self.game.window, 'black', (int(self.bomb_pos.x), int(self.bomb_pos.y)),
                               (self.game.cell_height - 5) // 2)
@@ -82,8 +80,7 @@ class Player(pygame.sprite.Sprite):
 
     def ban_direction(self):
         if not self.blocked:
-            print("aaaaaaa")
             self.banned_direction = self.direction
-            print(self.banned_direction)
+
 
 
