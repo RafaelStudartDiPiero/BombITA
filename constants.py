@@ -23,7 +23,7 @@ WHITE = (255, 255, 255)
 GREY = (190, 190, 190)
 
 # Player Constants
-PLAYER_START_POS = vector(5,5)
+PLAYER_START_POS = vector(2,1)
 
 
 # Enemy Constants

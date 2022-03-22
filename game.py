@@ -3,6 +3,7 @@ import sys
 import os
 from constants import *
 from player import *
+import math
 
 
 class Game:
@@ -16,12 +17,14 @@ class Game:
         self.is_running = True
         self.state = 'menu'
         self.menu_options = 0
+        self.walls = []
         self.load_files()
         self.cell_width = WIDTH//X_CELLS
         self.cell_height = HEIGHT//Y_CELLS
         self.player = Player(self, PLAYER_START_POS)
         self.all_sprites = pygame.sprite.Group()
         self.all_sprites.add(self.player)
+        self.bool = False
 
     def run(self):
         """"""
@@ -44,7 +47,6 @@ class Game:
         """"""
         dir_images = os.path.join(os.getcwd(), 'images')
         self.dir_audios = os.path.join(os.getcwd(), 'audios')
-        # self.spritesheet = os.path.join(dir_images, constantes.SPRITESHEET)
         self.menu_background = os.path.join(dir_images, MENU_BACKGROUND)
         self.menu_background = pygame.image.load(self.menu_background).convert()
         self.menu_background = pygame.transform.scale(self.menu_background,
@@ -53,6 +55,13 @@ class Game:
         self.single_background = pygame.image.load(self.single_background).convert()
         self.single_background = pygame.transform.scale(self.single_background,
                                                         (WIDTH, HEIGHT))
+
+        #creating list with the grid positions that have walls
+        with open(os.path.join(os.getcwd(),'walls.txt'), 'r') as file:
+            for y, line in enumerate(file):
+                for x, char in enumerate(line):
+                    if char == '1':
+                        self.walls.append(vector(x,y))
 
     def write_text(self, window, size, color, font_name, msg, position):
         """"""
@@ -70,6 +79,7 @@ class Game:
         for y in range(Y_CELLS):
             pygame.draw.line(self.window, GREY, (0, y * self.cell_height),
                              (WIDTH, y * self.cell_height))
+
 
 # ----------------------------- INTRO FUNCTIONS ------------------------------------------
 
@@ -140,8 +150,25 @@ class Game:
         else:
             self.player.move(vector(0, 0), 0)
 
+        self.bool = False
+        for wall in self.walls:
+            dist_x = abs((wall.x + 1/2)*self.cell_width - self.player.pix_pos.x)
+            dist_y = abs((wall.y+ 1/2)*self.cell_height - (self.player.pix_pos.y + 20))
+
+            if dist_x < self.cell_width*3/5 and dist_y < self.cell_height*3/5:
+                self.player.ban_direction()
+                self.player.blocked = True
+                self.bool = True
+
+        if not self.bool:
+            self.player.blocked = False
+            self.player.banned_direction = vector(1,1)
+
+
+
     def single_update(self):
         self.player.update()
+        print(self.clock.get_fps())
 
     def single_draw(self):
         """"""
