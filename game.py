@@ -3,6 +3,7 @@ import sys
 import os
 from constants import *
 from player import *
+from block import *
 import math
 
 
@@ -22,7 +23,19 @@ class Game:
         self.cell_width = WIDTH//X_CELLS
         self.cell_height = HEIGHT//Y_CELLS
         self.player = Player(self, PLAYER_START_POS)
+        self.block1 = Block(self)
+        self.block2 = Block(self)
+        self.block3 = Block(self)
+        self.block4 = Block(self)
+        self.block5 = Block(self)
+        self.block6 = Block(self)
         self.all_sprites = pygame.sprite.Group()
+        self.all_sprites.add(self.block1)
+        self.all_sprites.add(self.block2)
+        self.all_sprites.add(self.block3)
+        self.all_sprites.add(self.block4)
+        self.all_sprites.add(self.block5)
+        self.all_sprites.add(self.block6)
         self.all_sprites.add(self.player)
         self.bool = False
 
@@ -167,6 +180,12 @@ class Game:
 
 
     def single_update(self):
+        self.block1.update()
+        self.block2.update()
+        self.block3.update()
+        self.block4.update()
+        self.block5.update()
+        self.block6.update()
         self.player.update()
         print(self.clock.get_fps())
 
