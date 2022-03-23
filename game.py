@@ -4,6 +4,7 @@ import os
 from constants import *
 from player import *
 from block import *
+from enemy import *
 import math
 
 
@@ -19,10 +20,14 @@ class Game:
         self.state = 'menu'
         self.menu_options = 0
         self.walls = []
+        self.single_background = None
+        self.menu_background = None
+        self.dir_audios = None
         self.load_files()
         self.cell_width = WIDTH//X_CELLS
         self.cell_height = HEIGHT//Y_CELLS
         self.player = Player(self, PLAYER_START_POS)
+        self.enemy = Enemy(self, ENEMY_START_POS)
         self.block1 = Block(self)
         self.block2 = Block(self)
         self.block3 = Block(self)
@@ -37,6 +42,7 @@ class Game:
         self.all_sprites.add(self.block5)
         self.all_sprites.add(self.block6)
         self.all_sprites.add(self.player)
+        self.all_sprites.add(self.enemy)
         self.bool = False
 
     def run(self):
@@ -69,12 +75,12 @@ class Game:
         self.single_background = pygame.transform.scale(self.single_background,
                                                         (WIDTH, HEIGHT))
 
-        #creating list with the grid positions that have walls
-        with open(os.path.join(os.getcwd(),'walls.txt'), 'r') as file:
+        # Creating list with the grid positions that have walls
+        with open(os.path.join(os.getcwd(), 'walls.txt'), 'r') as file:
             for y, line in enumerate(file):
                 for x, char in enumerate(line):
                     if char == '1':
-                        self.walls.append(vector(x,y))
+                        self.walls.append(vector(x, y))
 
     def write_text(self, window, size, color, font_name, msg, position):
         """"""
@@ -92,7 +98,6 @@ class Game:
         for y in range(Y_CELLS):
             pygame.draw.line(self.window, GREY, (0, y * self.cell_height),
                              (WIDTH, y * self.cell_height))
-
 
 # ----------------------------- INTRO FUNCTIONS ------------------------------------------
 
@@ -153,7 +158,7 @@ class Game:
                 self.player.drop_bomb()
 
         if pygame.key.get_pressed()[pygame.K_w]:
-            self.player.move(vector(0,-1), 0)
+            self.player.move(vector(0, -1), 0)
         elif pygame.key.get_pressed()[pygame.K_s]:
             self.player.move(vector(0, 1), 2)
         elif pygame.key.get_pressed()[pygame.K_a]:
@@ -166,7 +171,7 @@ class Game:
         self.bool = False
         for wall in self.walls:
             dist_x = abs((wall.x + 1/2)*self.cell_width - self.player.pix_pos.x)
-            dist_y = abs((wall.y+ 1/2)*self.cell_height - (self.player.pix_pos.y + 20))
+            dist_y = abs((wall.y + 1/2)*self.cell_height - (self.player.pix_pos.y + 20))
 
             if dist_x < self.cell_width*3/5 and dist_y < self.cell_height*3/5:
                 self.player.ban_direction()
@@ -175,11 +180,10 @@ class Game:
 
         if not self.bool:
             self.player.blocked = False
-            self.player.banned_direction = vector(1,1)
-
-
+            self.player.banned_direction = vector(1, 1)
 
     def single_update(self):
+        self.enemy.update()
         self.block1.update()
         self.block2.update()
         self.block3.update()

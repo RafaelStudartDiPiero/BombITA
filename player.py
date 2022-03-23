@@ -4,17 +4,19 @@ import os
 vector = pygame.math.Vector2
 
 dir_project = os.path.dirname(__file__)
-dir_images = os.path.join(dir_project,'images')
+dir_images = os.path.join(dir_project, 'images')
 sprite_player = pygame.image.load(os.path.join(dir_images, 'bomberman.png'))
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, game, pos):
+        """"""
         pygame.sprite.Sprite.__init__(self)
         self.game = game
         self.grid_pos = pos
-        self.pix_pos = vector(self.grid_pos.x*self.game.cell_width + self.game.cell_width /2,
-                              self.grid_pos.y*self.game.cell_height + self.game.cell_height /2)
+        self.pix_pos = vector(
+            self.grid_pos.x*self.game.cell_width + self.game.cell_width / 2,
+            self.grid_pos.y*self.game.cell_height + self.game.cell_height / 2)
         self.direction = vector(0, 0)
         self.dropped = False
         self.bomb_time = 0
@@ -32,10 +34,11 @@ class Player(pygame.sprite.Sprite):
         self.change_direction = False
         self.orientation = 0
         self.base_rect = None
-        self.banned_direction = vector(1,1)
+        self.banned_direction = vector(1, 1)
         self.blocked = False
 
     def update(self):
+        """"""
         if self.direction != self.banned_direction:
             self.pix_pos += self.direction*2
         
@@ -55,15 +58,15 @@ class Player(pygame.sprite.Sprite):
         self.image = self.player_images[int(self.index_img)]
         self.rect.center = self.pix_pos
 
-
-
-
     def draw(self):
-        if self.dropped == True:
-            pygame.draw.circle(self.game.window, 'black', (int(self.bomb_pos.x), int(self.bomb_pos.y)),
-                              (self.game.cell_height - 5) // 2)
+        """"""
+        if self.dropped:
+            pygame.draw.circle(self.game.window, 'black', (int(self.bomb_pos.x),
+                                                           int(self.bomb_pos.y)),
+                               (self.game.cell_height - 5) // 2)
 
     def move(self, direction, orientation):
+        """"""
         if direction != self.direction:
             self.change_direction = True
         else:
@@ -73,14 +76,13 @@ class Player(pygame.sprite.Sprite):
         self.orientation = orientation
 
     def drop_bomb(self):
+        """"""
         if not self.dropped:
             self.dropped = True
             self.bomb_pos.x = self.pix_pos.x
             self.bomb_pos.y = self.pix_pos.y
 
     def ban_direction(self):
+        """"""
         if not self.blocked:
             self.banned_direction = self.direction
-
-
-
