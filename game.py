@@ -43,7 +43,10 @@ class Game:
         self.all_sprites.add(self.block6)
         self.all_sprites.add(self.player)
         self.all_sprites.add(self.enemy)
+        self.collision_sprites = pygame.sprite.Group()
+        self.collision_sprites.add(self.enemy)
         self.bool = False
+        self.collisions = None
 
     def run(self):
         """"""
@@ -183,14 +186,21 @@ class Game:
             self.player.banned_direction = vector(1, 1)
 
     def single_update(self):
-        self.enemy.update()
-        self.block1.update()
-        self.block2.update()
-        self.block3.update()
-        self.block4.update()
-        self.block5.update()
-        self.block6.update()
-        self.player.update()
+        if self.collisions:
+            pass
+        else:
+            self.enemy.update()
+            self.block1.update()
+            self.block2.update()
+            self.block3.update()
+            self.block4.update()
+            self.block5.update()
+            self.block6.update()
+            self.player.update()
+        self.collisions = pygame.sprite.spritecollide(self.player,
+                                                      self.collision_sprites, False
+                                                      , pygame.sprite.collide_mask)
+        print(self.collisions)
         print(self.clock.get_fps())
 
     def single_draw(self):

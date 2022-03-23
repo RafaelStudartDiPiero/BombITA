@@ -31,6 +31,7 @@ class Player(pygame.sprite.Sprite):
         self.index_img = 0
         self.image = self.player_images[self.index_img]
         self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
         self.change_direction = False
         self.orientation = 0
         self.base_rect = None
