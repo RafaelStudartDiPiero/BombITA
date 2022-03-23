@@ -41,6 +41,7 @@ class Enemy(pygame.sprite.Sprite):
         self.index_img = 0
         self.image = self.enemy_images[self.index_img]
         self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
         self.must_sort = True
         self.time_sort = 0
         self.collision_bool = False
