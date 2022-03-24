@@ -35,11 +35,13 @@ class Bomb(pygame.sprite.Sprite):
             self.time += 1
             self.image = self.bomb_images[int(self.index_img)]
             self.index_img += 3 / self.time_bomb
+            self.rect.center = self.pos
 
         elif self.time_explosion < self.time_bomb/3:
             self.time_explosion += 1
             self.index_img = 5
             self.image = self.bomb_images[int(self.index_img)]
+            self.rect.center = self.pos + vector(-30,-20)
 
         else:
             self.time = 0
@@ -47,5 +49,5 @@ class Bomb(pygame.sprite.Sprite):
             self.dropped = False
             self.index_img = 0
 
-        self.rect.center = self.pos
+
 
