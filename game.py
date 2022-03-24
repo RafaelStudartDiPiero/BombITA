@@ -22,6 +22,7 @@ class Game:
         self.walls = []
         self.single_background = None
         self.menu_background = None
+        self.gameover_background = None
         self.dir_audios = None
         self.load_files()
         self.cell_width = WIDTH//X_CELLS
@@ -47,6 +48,7 @@ class Game:
         self.collision_sprites.add(self.enemy)
         self.bool = False
         self.collisions = None
+
 
     def run(self):
         """"""
@@ -82,6 +84,10 @@ class Game:
         self.single_background = pygame.transform.scale(self.single_background,
                                                         (WIDTH, HEIGHT))
 
+        self.gameover_background = os.path.join(dir_images, GAME_OVER_BACKGROUND)
+        self.gameover_background = pygame.image.load(self.gameover_background).convert()
+        self.gameover_background = pygame.transform.scale(self.gameover_background,
+                                                      (WIDTH, HEIGHT))
         # Creating list with the grid positions that have walls
         with open(os.path.join(os.getcwd(), 'walls.txt'), 'r') as file:
             for y, line in enumerate(file):
@@ -224,6 +230,8 @@ class Game:
                 self.is_running = False
             if event.type == pygame.KEYDOWN:
                 self.state = 'menu'
+                self.is_running = False
+
         pass
 
     def gameover_update(self):
@@ -232,7 +240,7 @@ class Game:
 
     def gameover_draw(self):
         """"""
-        self.window.fill(BLACK)
+        self.window.blit(self.gameover_background, (0, 0))
         self.write_text(self.window, MENU_TEXT_SIZE, WHITE,
-                        MENU_TEXT_FONT, 'Aperte qualquer tecla para retornar ao Menu', [400, 200])
+                        MENU_TEXT_FONT, 'PRESS ANY KEY TO QUIT', [400, 170])
         pygame.display.update()

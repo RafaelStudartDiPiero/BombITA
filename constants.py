@@ -9,6 +9,7 @@ FPS = 60
 
 MENU_BACKGROUND = 'menu_background.png'
 SINGLE_BACKGROUND = 'single_background.png'
+GAME_OVER_BACKGROUND = 'game_over_background.png'
 
 MENU_TEXT_SIZE = 35
 MENU_TEXT_FONT = 'comicsansms'
@@ -21,6 +22,7 @@ Y_CELLS = 13
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREY = (190, 190, 190)
+RED = (255, 0, 0)
 
 # Player Constants
 PLAYER_START_POS = vector(2, 1)
