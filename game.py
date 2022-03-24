@@ -215,7 +215,7 @@ class Game:
         self.all_sprites.draw(self.window)
         pygame.display.update()
 
-# ---------------------------- GAME OVER FUNCTIONS -----------------------------------------
+# ---------------------------- GAME OVER FUNCTIONS ---------------------------------------
 
     def gameover_events(self):
         """"""

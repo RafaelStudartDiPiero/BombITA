@@ -1,6 +1,9 @@
 import pygame
 from constants import *
 import os
+from bomb import *
+
+
 vector = pygame.math.Vector2
 
 dir_project = os.path.dirname(__file__)
@@ -18,9 +21,6 @@ class Player(pygame.sprite.Sprite):
             self.grid_pos.x*self.game.cell_width + self.game.cell_width / 2,
             self.grid_pos.y*self.game.cell_height + self.game.cell_height / 2)
         self.direction = vector(0, 0)
-        self.dropped = False
-        self.bomb_time = 0
-        self.bomb_pos = vector(0,  0)
         self.player_images = []
         for row in range(4):
             for col in range(3):
@@ -37,17 +37,14 @@ class Player(pygame.sprite.Sprite):
         self.base_rect = None
         self.banned_direction = vector(1, 1)
         self.blocked = False
+        self.bomb = Bomb(self.game)
+        self.sprites_bomb = pygame.sprite.Group()
+        self.sprites_bomb.add(self.bomb)
 
     def update(self):
         """"""
         if self.direction != self.banned_direction:
             self.pix_pos += self.direction*2
-        
-        if self.bomb_time < 4*FPS:
-            self.bomb_time += 1
-        else:
-            self.dropped = False
-            self.bomb_time = 0
 
         if self.change_direction:
             self.index_img = self.orientation * 3
@@ -58,13 +55,12 @@ class Player(pygame.sprite.Sprite):
 
         self.image = self.player_images[int(self.index_img)]
         self.rect.center = self.pix_pos
+        self.bomb.update()
 
     def draw(self):
         """"""
-        if self.dropped:
-            pygame.draw.circle(self.game.window, 'black', (int(self.bomb_pos.x),
-                                                           int(self.bomb_pos.y)),
-                               (self.game.cell_height - 5) // 2)
+        if self.bomb.dropped:
+            self.sprites_bomb.draw(self.game.window)
 
     def move(self, direction, orientation):
         """"""
@@ -78,10 +74,10 @@ class Player(pygame.sprite.Sprite):
 
     def drop_bomb(self):
         """"""
-        if not self.dropped:
-            self.dropped = True
-            self.bomb_pos.x = self.pix_pos.x
-            self.bomb_pos.y = self.pix_pos.y
+        if not self.bomb.dropped:
+            self.bomb.dropped = True
+            self.bomb.pos.x = self.pix_pos.x
+            self.bomb.pos.y = self.pix_pos.y
 
     def ban_direction(self):
         """"""
