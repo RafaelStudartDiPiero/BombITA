@@ -5,7 +5,6 @@ from bomb import *
 
 
 vector = pygame.math.Vector2
-
 dir_project = os.path.dirname(__file__)
 dir_images = os.path.join(dir_project, 'images')
 sprite_player = pygame.image.load(os.path.join(dir_images, 'bomberman.png'))

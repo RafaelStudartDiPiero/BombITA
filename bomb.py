@@ -16,12 +16,12 @@ class Bomb(pygame.sprite.Sprite):
         self.pos = vector(0, 0)
         self.bomb_images = []
         for row in range(3):
-            self.img = sprite_bomb.subsurface((row*16, 0), (16, 16))
-            self.img = pygame.transform.scale(self.img, (32, 32))
+            self.img = sprite_bomb.subsurface((row*18, 0), (18, 21))
+            self.img = pygame.transform.scale(self.img, (18*2, 21*2))
             self.bomb_images.append(self.img)
         for row in range(3, 6):
-            self.img = sprite_bomb.subsurface((row*16 + 5, 17), (16, 16))
-            self.img = pygame.transform.scale(self.img, (32*2, 32*2))
+            self.img = sprite_bomb.subsurface((460, 32), (52, 52))
+            self.img = pygame.transform.scale(self.img, (52*2, 52*2))
             self.bomb_images.append(self.img)
 
         self.index_img = 0
