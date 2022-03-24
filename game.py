@@ -46,8 +46,19 @@ class Game:
         self.all_sprites.add(self.enemy)
         self.collision_sprites = pygame.sprite.Group()
         self.collision_sprites.add(self.enemy)
+        self.collision_sprites_bomb = pygame.sprite.Group()
+        self.collision_sprites_bomb.add(self.enemy)
+        self.collision_sprites_bomb_block = pygame.sprite.Group()
+        self.collision_sprites_bomb_block.add(self.block1)
+        self.collision_sprites_bomb_block.add(self.block2)
+        self.collision_sprites_bomb_block.add(self.block3)
+        self.collision_sprites_bomb_block.add(self.block4)
+        self.collision_sprites_bomb_block.add(self.block5)
+        self.collision_sprites_bomb_block.add(self.block6)
         self.bool = False
         self.collisions = None
+        self.collisions_bomb = None
+        self.collisions_bomb_block = None
 
 
     def run(self):
@@ -207,10 +218,21 @@ class Game:
             self.block5.update()
             self.block6.update()
             self.player.update()
+        if self.collisions_bomb:
+            self.all_sprites.remove(self.enemy)
+            self.enemy.destroy()
         self.collisions = pygame.sprite.spritecollide(self.player,
                                                       self.collision_sprites, False
                                                       , pygame.sprite.collide_mask)
+        self.collisions_bomb = pygame.sprite.spritecollide(self.player.bomb,
+                                                           self.collision_sprites_bomb, False
+                                                           , pygame.sprite.collide_mask)
+        self.collisions_bomb_block = pygame.sprite.spritecollide(self.player.bomb,
+                                                           self.collision_sprites_bomb_block, False
+                                                           , pygame.sprite.collide_mask)
         print(self.collisions)
+        print(self.collisions_bomb)
+        print(self.collisions_bomb_block)
         print(self.clock.get_fps())
 
     def single_draw(self):

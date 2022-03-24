@@ -46,26 +46,28 @@ class Enemy(pygame.sprite.Sprite):
         self.time_sort = 0
         self.collision_bool = False
         self.orientation = 0
+        self.destroyed = False
 
     def update(self):
         """"""
-        if self.time_sort < 6*FPS:
-            self.time_sort += 1
-        else:
-            self.time_sort = 0
-            self.must_sort = True
-        self.collision()
+        if not self.destroyed:
+            if self.time_sort < 6*FPS:
+                self.time_sort += 1
+            else:
+                self.time_sort = 0
+                self.must_sort = True
+            self.collision()
 
-        self.sort_direction()
+            self.sort_direction()
 
-        self.pix_pos += self.direction * 1
+            self.pix_pos += self.direction * 1
 
-        self.index_img += 0.2
-        if self.index_img >= 3 * (self.orientation + 1):
-            self.index_img = self.orientation * 3
+            self.index_img += 0.2
+            if self.index_img >= 3 * (self.orientation + 1):
+                self.index_img = self.orientation * 3
 
-        self.image = self.enemy_images[int(self.index_img)]
-        self.rect.center = self.pix_pos
+            self.image = self.enemy_images[int(self.index_img)]
+            self.rect.center = self.pix_pos
 
     def draw(self):
         """"""
@@ -114,3 +116,8 @@ class Enemy(pygame.sprite.Sprite):
             self.orientation = 2
         elif self.direction == (-1, 0):
             self.orientation = 3
+
+    def destroy(self):
+        self.pix_pos = vector(880, 450)
+        self.destroyed = True
+        self.rect.center = self.pix_pos
