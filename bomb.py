@@ -27,7 +27,7 @@ class Bomb(pygame.sprite.Sprite):
         self.index_img = 0
         self.image = self.bomb_images[self.index_img]
         self.rect = self.image.get_rect()
-        self.mask = pygame.mask.from_surface(self.image)
+        # self.mask = pygame.mask.from_surface(self.image)
         self.dropped = False
         self.time_bomb = 4*FPS
         
