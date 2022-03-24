@@ -59,6 +59,10 @@ class Game:
                 self.single_events()
                 self.single_update()
                 self.single_draw()
+            if self.state == 'gameover':
+                self.gameover_events()
+                self.gameover_update()
+                self.gameover_draw()
             self.clock.tick(FPS)
         pygame.quit()
         sys.exit()
@@ -187,7 +191,7 @@ class Game:
 
     def single_update(self):
         if self.collisions:
-            pass
+            self.state = 'gameover'
         else:
             self.enemy.update()
             self.block1.update()
@@ -209,4 +213,26 @@ class Game:
         self.draw_grid()
         self.player.draw()
         self.all_sprites.draw(self.window)
+        pygame.display.update()
+
+# ---------------------------- GAME OVER FUNCTIONS -----------------------------------------
+
+    def gameover_events(self):
+        """"""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.is_running = False
+            if event.type == pygame.KEYDOWN:
+                self.state = 'menu'
+        pass
+
+    def gameover_update(self):
+        """"""
+        pass
+
+    def gameover_draw(self):
+        """"""
+        self.window.fill(BLACK)
+        self.write_text(self.window, MENU_TEXT_SIZE, WHITE,
+                        MENU_TEXT_FONT, 'Aperte qualquer tecla para retornar ao Menu', [400, 200])
         pygame.display.update()
