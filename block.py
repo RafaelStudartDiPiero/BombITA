@@ -27,6 +27,7 @@ class Block(pygame.sprite.Sprite):
         self.index_img = 0
         self.image = self.block_images[self.index_img]
         self.rect = self.image.get_rect()
+        self.mask = pygame.mask.from_surface(self.image)
         self.rect.center = self.pix_pos
         self.free = False
         while not self.free:
