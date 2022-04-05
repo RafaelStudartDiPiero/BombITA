@@ -29,19 +29,12 @@ class Game:
         self.cell_height = HEIGHT//Y_CELLS
         self.player = Player(self, PLAYER_START_POS)
         self.enemy = Enemy(self, ENEMY_START_POS)
-        self.block1 = Block(self)
-        self.block2 = Block(self)
-        self.block3 = Block(self)
-        self.block4 = Block(self)
-        self.block5 = Block(self)
-        self.block6 = Block(self)
+        self.blocks = [None]*BLOCKS_NUMBER
+        for i in range(len(self.blocks)):
+            self.blocks[i] = Block(self)
         self.all_sprites = pygame.sprite.Group()
-        self.all_sprites.add(self.block1)
-        self.all_sprites.add(self.block2)
-        self.all_sprites.add(self.block3)
-        self.all_sprites.add(self.block4)
-        self.all_sprites.add(self.block5)
-        self.all_sprites.add(self.block6)
+        for i in range(len(self.blocks)):
+            self.all_sprites.add(self.blocks[i])
         self.all_sprites.add(self.player)
         self.all_sprites.add(self.enemy)
         self.collision_sprites = pygame.sprite.Group()
@@ -49,12 +42,8 @@ class Game:
         self.collision_sprites_bomb = pygame.sprite.Group()
         self.collision_sprites_bomb.add(self.enemy)
         self.collision_sprites_bomb_block = pygame.sprite.Group()
-        self.collision_sprites_bomb_block.add(self.block1)
-        self.collision_sprites_bomb_block.add(self.block2)
-        self.collision_sprites_bomb_block.add(self.block3)
-        self.collision_sprites_bomb_block.add(self.block4)
-        self.collision_sprites_bomb_block.add(self.block5)
-        self.collision_sprites_bomb_block.add(self.block6)
+        for i in range(len(self.blocks)):
+            self.collision_sprites_bomb_block.add(self.blocks[i])
         self.bool = False
         self.collisions = None
         self.collisions_bomb = None
@@ -211,12 +200,8 @@ class Game:
             self.state = 'gameover'
         else:
             self.enemy.update()
-            self.block1.update()
-            self.block2.update()
-            self.block3.update()
-            self.block4.update()
-            self.block5.update()
-            self.block6.update()
+            for i in range(len(self.blocks)):
+                self.blocks[i].update()
             self.player.update()
         if self.collisions_bomb:
             self.all_sprites.remove(self.enemy)
