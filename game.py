@@ -209,16 +209,19 @@ class Game:
         self.collisions = pygame.sprite.spritecollide(self.player,
                                                       self.collision_sprites, False
                                                       , pygame.sprite.collide_mask)
-        self.collisions_bomb = pygame.sprite.spritecollide(self.player.bomb,
-                                                           self.collision_sprites_bomb, False
-                                                           , pygame.sprite.collide_mask)
+        if self.player.bomb.exploded:
+            self.collisions_bomb = pygame.sprite.spritecollide(self.player.bomb,
+                                                               self.collision_sprites_bomb
+                                                               , False
+                                                               , pygame.sprite.collide_mask)
         self.collisions_bomb_block = pygame.sprite.spritecollide(self.player.bomb,
-                                                           self.collision_sprites_bomb_block, False
-                                                           , pygame.sprite.collide_mask)
-        print(self.collisions)
-        print(self.collisions_bomb)
-        print(self.collisions_bomb_block)
-        print(self.clock.get_fps())
+                                                                 self.collision_sprites_bomb_block,
+                                                                 False
+                                                            , pygame.sprite.collide_mask)
+        # print(self.collisions)
+        # print(self.collisions_bomb)
+        # print(self.collisions_bomb_block)
+        # print(self.clock.get_fps())
 
     def single_draw(self):
         """"""

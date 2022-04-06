@@ -27,28 +27,47 @@ class Bomb(pygame.sprite.Sprite):
         self.index_img = 0
         self.image = self.bomb_images[self.index_img]
         self.rect = self.image.get_rect()
-        #  elf.mask = pygame.mask.from_surface(self.image)
+        #  self.mask = pygame.mask.from_surface(self.image)
         self.dropped = False
         self.time_bomb = 4*FPS
+        self.exploded = False
+        self.added_walls = False
         
     def update(self):
-        if self.time < self.time_bomb:
-            self.time += 1
-            self.image = self.bomb_images[int(self.index_img)]
-            self.index_img += 3 / self.time_bomb
-            self.rect.center = self.pos
+        if self.dropped:
+            if self.time < self.time_bomb:
+                self.time += 1
+                self.image = self.bomb_images[int(self.index_img)]
+                self.index_img += 3 / self.time_bomb
+                self.rect.center = self.pos
+                print(f'Antes de Explodir:{self.exploded}')
+                if not self.added_walls and self.dropped:
+                    self.game.walls.append(vector(
+                        int(self.pos.x/self.game.cell_width),
+                        int(self.pos.y/self.game.cell_height)))
+                    self.added_walls = True
 
-        elif self.time_explosion < self.time_bomb/3:
-            self.time_explosion += 1
-            self.index_img = 5
-            self.image = self.bomb_images[int(self.index_img)]
-            self.rect.center = self.pos + vector(-30,-20)
+            elif self.time_explosion < self.time_bomb/3:
+                print()
+                self.time_explosion += 1
+                self.index_img = 5
+                print(f'Explosao:{self.exploded}')
+                self.image = self.bomb_images[int(self.index_img)]
+                self.rect.center = self.pos + vector(-30, -20)
+                self.exploded = True
 
-        else:
-            self.time = 0
-            self.time_explosion = 0
-            self.dropped = False
-            self.index_img = 0
+            else:
+                print(f'Depois de Explodir:{self.exploded}')
+                self.time = 0
+                self.time_explosion = 0
+                if self.dropped and self.added_walls:
+                    self.game.walls.remove(vector(
+                            int(self.pos.x/self.game.cell_width),
+                            int(self.pos.y/self.game.cell_height)))
+                    self.added_walls = False
+                self.exploded = False
+                self.dropped = False
+                self.index_img = 0
 
 
 
