@@ -49,7 +49,6 @@ class Game:
         self.collisions_bomb = None
         self.collisions_bomb_block = None
 
-
     def run(self):
         """"""
         while self.is_running:
@@ -217,11 +216,11 @@ class Game:
         self.collisions_bomb_block = pygame.sprite.spritecollide(self.player.bomb,
                                                                  self.collision_sprites_bomb_block,
                                                                  False
-                                                            , pygame.sprite.collide_mask)
-        # print(self.collisions)
-        # print(self.collisions_bomb)
-        # print(self.collisions_bomb_block)
-        # print(self.clock.get_fps())
+                                                                , pygame.sprite.collide_mask)
+        print(self.collisions)
+        print(self.collisions_bomb)
+        print(self.collisions_bomb_block)
+        print(self.clock.get_fps())
 
     def single_draw(self):
         """"""

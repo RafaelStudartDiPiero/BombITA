@@ -40,7 +40,6 @@ class Bomb(pygame.sprite.Sprite):
                 self.image = self.bomb_images[int(self.index_img)]
                 self.index_img += 3 / self.time_bomb
                 self.rect.center = self.pos
-                print(f'Antes de Explodir:{self.exploded}')
                 if not self.added_walls and self.dropped:
                     self.game.walls.append(vector(
                         int(self.pos.x/self.game.cell_width),
@@ -51,13 +50,11 @@ class Bomb(pygame.sprite.Sprite):
                 print()
                 self.time_explosion += 1
                 self.index_img = 5
-                print(f'Explosao:{self.exploded}')
                 self.image = self.bomb_images[int(self.index_img)]
                 self.rect.center = self.pos + vector(-30, -20)
                 self.exploded = True
 
             else:
-                print(f'Depois de Explodir:{self.exploded}')
                 self.time = 0
                 self.time_explosion = 0
                 if self.dropped and self.added_walls:
