@@ -27,7 +27,8 @@ class Game:
         self.load_files()
         self.cell_width = WIDTH//X_CELLS
         self.cell_height = HEIGHT//Y_CELLS
-        self.player = Player(self, PLAYER_START_POS)
+        self.player1 = Player(self, PLAYER_START_POS)
+        self.player2 = Player(self, PLAYER_START_POS)
         self.enemy = Enemy(self, ENEMY_START_POS)
         self.blocks = [None]*BLOCKS_NUMBER
         for i in range(len(self.blocks)):
@@ -35,19 +36,29 @@ class Game:
         self.all_sprites = pygame.sprite.Group()
         for i in range(len(self.blocks)):
             self.all_sprites.add(self.blocks[i])
-        self.all_sprites.add(self.player)
+        self.all_sprites.add(self.player1)
+        self.all_sprites.add(self.player2)
         self.all_sprites.add(self.enemy)
         self.collision_sprites = pygame.sprite.Group()
         self.collision_sprites.add(self.enemy)
+        self.collision_sprites_bomb_player = pygame.sprite.Group()
+        self.collision_sprites_bomb_player.add(self.player1.bomb)
+        self.collision_sprites_bomb_player.add(self.player2.bomb)
         self.collision_sprites_bomb = pygame.sprite.Group()
         self.collision_sprites_bomb.add(self.enemy)
         self.collision_sprites_bomb_block = pygame.sprite.Group()
         for i in range(len(self.blocks)):
             self.collision_sprites_bomb_block.add(self.blocks[i])
-        self.bool = False
-        self.collisions = None
-        self.collisions_bomb = None
-        self.collisions_bomb_block = None
+        self.bool1 = False
+        self.collisions1 = None
+        self.collisions_bomb1 = None
+        self.collisions_bomb_block1 = None
+        self.collisions_bomb_player1 = None
+        self.bool2 = False
+        self.collisions2 = None
+        self.collisions_bomb2 = None
+        self.collisions_bomb_block2 = None
+        self.collisions_bomb_player2 = None
 
     def run(self):
         """"""
@@ -167,66 +178,132 @@ class Game:
             if event.type == pygame.QUIT:
                 self.is_running = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                self.player.drop_bomb()
+                self.player1.drop_bomb()
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
+                self.player2.drop_bomb()
+
 
         if pygame.key.get_pressed()[pygame.K_w]:
-            self.player.move(vector(0, -1), 0)
+            self.player1.move(vector(0, -1), 0)
         elif pygame.key.get_pressed()[pygame.K_s]:
-            self.player.move(vector(0, 1), 2)
+            self.player1.move(vector(0, 1), 2)
         elif pygame.key.get_pressed()[pygame.K_a]:
-            self.player.move(vector(-1, 0), 3)
+            self.player1.move(vector(-1, 0), 3)
         elif pygame.key.get_pressed()[pygame.K_d]:
-            self.player.move(vector(1, 0), 1)
+            self.player1.move(vector(1, 0), 1)
         else:
-            self.player.move(vector(0, 0), 0)
+            self.player1.move(vector(0, 0), 0)
 
-        self.bool = False
+        if pygame.key.get_pressed()[pygame.K_UP]:
+            self.player2.move(vector(0, -1), 0)
+        elif pygame.key.get_pressed()[pygame.K_DOWN]:
+            self.player2.move(vector(0, 1), 2)
+        elif pygame.key.get_pressed()[pygame.K_LEFT]:
+            self.player2.move(vector(-1, 0), 3)
+        elif pygame.key.get_pressed()[pygame.K_RIGHT]:
+            self.player2.move(vector(1, 0), 1)
+        else:
+            self.player2.move(vector(0, 0), 0)
+
+        self.bool1 = False
         for wall in self.walls:
-            dist_x = abs((wall.x + 1/2)*self.cell_width - self.player.pix_pos.x)
-            dist_y = abs((wall.y + 1/2)*self.cell_height - (self.player.pix_pos.y + 20))
+            dist_x = abs((wall.x + 1/2) * self.cell_width - self.player1.pix_pos.x)
+            dist_y = abs((wall.y + 1/2) * self.cell_height - (self.player1.pix_pos.y + 20))
 
             if dist_x < self.cell_width*3/5 and dist_y < self.cell_height*3/5:
-                self.player.ban_direction()
-                self.player.blocked = True
-                self.bool = True
+                self.player1.ban_direction()
+                self.player1.blocked = True
+                self.bool1 = True
 
-        if not self.bool:
-            self.player.blocked = False
-            self.player.banned_direction = vector(1, 1)
+        if not self.bool1:
+            self.player1.blocked = False
+            self.player1.banned_direction = vector(1, 1)
+
+        self.bool2 = False
+        for wall in self.walls:
+            dist_x = abs((wall.x + 1 / 2) * self.cell_width - self.player2.pix_pos.x)
+            dist_y = abs((wall.y + 1 / 2) * self.cell_height - (self.player2.pix_pos.y + 20))
+
+            if dist_x < self.cell_width * 3 / 5 and dist_y < self.cell_height * 3 / 5:
+                self.player2.ban_direction()
+                self.player2.blocked = True
+                self.bool2 = True
+
+        if not self.bool2:
+            self.player2.blocked = False
+            self.player2.banned_direction = vector(1, 1)
 
     def single_update(self):
-        if self.collisions:
+        if self.collisions1 or self.collisions2:
             self.state = 'gameover'
         else:
             self.enemy.update()
             for i in range(len(self.blocks)):
                 self.blocks[i].update()
-            self.player.update()
-        if self.collisions_bomb:
+            self.player1.update()
+            self.player2.update()
+        if self.collisions_bomb1 or self.collisions_bomb2:
             self.all_sprites.remove(self.enemy)
             self.enemy.destroy()
-        self.collisions = pygame.sprite.spritecollide(self.player,
-                                                      self.collision_sprites, False
-                                                      , pygame.sprite.collide_mask)
-        if self.player.bomb.exploded:
-            self.collisions_bomb = pygame.sprite.spritecollide(self.player.bomb,
-                                                               self.collision_sprites_bomb
-                                                               , False
-                                                               , pygame.sprite.collide_mask)
-        self.collisions_bomb_block = pygame.sprite.spritecollide(self.player.bomb,
-                                                                 self.collision_sprites_bomb_block,
-                                                                 False
+        if self.collisions_bomb_player1:
+            self.all_sprites.remove(self.player1)
+            self.player1.destroy()
+        if self.collisions_bomb_player2:
+            self.all_sprites.remove(self.player2)
+            self.player2.destroy()
+
+        self.collisions1 = pygame.sprite.spritecollide(self.player1,
+                                                       self.collision_sprites, False
+                                                       , pygame.sprite.collide_mask)
+        if self.player1.bomb.exploded:
+            self.collisions_bomb1 = pygame.sprite.spritecollide(self.player1.bomb,
+                                                                self.collision_sprites_bomb
+                                                                , False
                                                                 , pygame.sprite.collide_mask)
-        print(self.collisions)
-        print(self.collisions_bomb)
-        print(self.collisions_bomb_block)
-        print(self.clock.get_fps())
+            self.collisions_bomb_player1 = pygame.sprite.spritecollide(self.player1,
+                                                                self.collision_sprites_bomb_player
+                                                                , False
+                                                                , pygame.sprite.collide_mask)
+            self.collisions_bomb_player2 = pygame.sprite.spritecollide(self.player2,
+                                                                self.collision_sprites_bomb_player
+                                                                , False
+                                                                , pygame.sprite.collide_mask)
+        self.collisions_bomb_block1 = pygame.sprite.spritecollide(self.player1.bomb,
+                                                                  self.collision_sprites_bomb_block,
+                                                                  False
+                                                                  , pygame.sprite.collide_mask)
+
+        self.collisions2 = pygame.sprite.spritecollide(self.player2,
+                                                       self.collision_sprites, False
+                                                     , pygame.sprite.collide_mask)
+        if self.player2.bomb.exploded:
+            self.collisions_bomb2 = pygame.sprite.spritecollide(self.player2.bomb,
+                                                                self.collision_sprites_bomb
+                                                                , False
+                                                                , pygame.sprite.collide_mask)
+            self.collisions_bomb_player1 = pygame.sprite.spritecollide(self.player1,
+                                                                self.collision_sprites_bomb_player
+                                                                , False
+                                                                , pygame.sprite.collide_mask)
+            self.collisions_bomb_player2 = pygame.sprite.spritecollide(self.player2,
+                                                                self.collision_sprites_bomb_player
+                                                                , False
+                                                                , pygame.sprite.collide_mask)
+        self.collisions_bomb_block2 = pygame.sprite.spritecollide(self.player2.bomb,
+                                                                  self.collision_sprites_bomb_block,
+                                                                  False
+                                                                  , pygame.sprite.collide_mask)
+        # print(self.collisions1)
+        # print(self.collisions_bomb1)
+        # print(self.collisions_bomb_block1)
+        # print(self.clock.get_fps())
 
     def single_draw(self):
         """"""
         self.window.blit(self.single_background, (0, 0))
         self.draw_grid()
-        self.player.draw()
+        self.player1.draw()
+        self.player2.draw()
         self.all_sprites.draw(self.window)
         pygame.display.update()
 

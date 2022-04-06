@@ -82,3 +82,8 @@ class Player(pygame.sprite.Sprite):
         """"""
         if not self.blocked:
             self.banned_direction = self.direction
+
+    def destroy(self):
+        self.pix_pos = vector(880, 450)
+        self.destroyed = True
+        self.rect.center = self.pix_pos
