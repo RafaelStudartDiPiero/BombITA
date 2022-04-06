@@ -10,53 +10,80 @@ import math
 
 class Game:
     def __init__(self):
-        """"""
+        """Method responsible for initializing and defining import attributes that will be used during the game"""
+        # PyGame Initialization
         pygame.init()
         pygame.mixer.init()
+        # Window Configuration
         self.window = pygame.display.set_mode((WIDTH, HEIGHT))
         pygame.display.set_caption(WINDOW_TITLE)
+        # Defining Clock
         self.clock = pygame.time.Clock()
+        # Game States
         self.is_running = True
         self.state = 'menu'
+        # Starting Menu Options
         self.menu_options = 0
-        self.walls = []
+        # Defining BackGrounds
         self.single_background = None
         self.menu_background = None
         self.gameover_background = None
+        # Audio Directory
         self.dir_audios = None
+        # List of Walls that Player Can't Trespass
+        self.walls = []
+        # Loading Images and Creating Walls
         self.load_files()
+        # Defining Cell Constants
         self.cell_width = WIDTH//X_CELLS
         self.cell_height = HEIGHT//Y_CELLS
+        # Instantiating Players
         self.player1 = Player(self, PLAYER_START_POS)
         self.player2 = Player(self, PLAYER_START_POS)
+        # Instantiating Basic Enemy
         self.enemy = Enemy(self, ENEMY_START_POS)
+        # Instantiating list of Breakable Blocks
         self.blocks = [None]*BLOCKS_NUMBER
         for i in range(len(self.blocks)):
             self.blocks[i] = Block(self)
+        # Creating a SpriteGroup that will be used to update all sprites that will be used simultaneously
         self.all_sprites = pygame.sprite.Group()
         for i in range(len(self.blocks)):
             self.all_sprites.add(self.blocks[i])
         self.all_sprites.add(self.player1)
         self.all_sprites.add(self.player2)
         self.all_sprites.add(self.enemy)
+        # Creating a SpriteGroup that will be used to contain all elements that causes GameOver when collide with player
         self.collision_sprites = pygame.sprite.Group()
         self.collision_sprites.add(self.enemy)
+        # Creating a SpriteGroup that will be used to define the interaction between bombs and players
         self.collision_sprites_bomb_player = pygame.sprite.Group()
         self.collision_sprites_bomb_player.add(self.player1.bomb)
         self.collision_sprites_bomb_player.add(self.player2.bomb)
+        # Creating a SpriteGroup that will be used to define the interaction between the bomb and the enemy
         self.collision_sprites_bomb = pygame.sprite.Group()
         self.collision_sprites_bomb.add(self.enemy)
+        # Creating a SpriteGroup that will be used to define the interaciont between the bomb and the blocks
         self.collision_sprites_bomb_block = pygame.sprite.Group()
         for i in range(len(self.blocks)):
             self.collision_sprites_bomb_block.add(self.blocks[i])
-        self.bool1 = False
+        # Creating a Bool Variable to Check if a Player1 needs to be Blocked
+        self.is_player1_blocked = False
+        # Creating List that contains elements that collide with the player1 at any given moment
         self.collisions1 = None
+        # Creating List that contains elements in the collision between bombs(Of player1) and enemy
         self.collisions_bomb1 = None
+        # Creating List that contains elements in the collision between bombs(Of player1) and blocks
         self.collisions_bomb_block1 = None
+        # Creating List that contains elements in the collision bombs(Of player1) and the player
         self.collisions_bomb_player1 = None
-        self.bool2 = False
+        # Creating a Bool Variable to Check if a Player2 needs to be Blocked
+        self.is_player2_blocked = False
+        # Creating List that contains elements that collide with the player2 at any given moment
         self.collisions2 = None
+        # Creating List that contains elements in the collision between bombs(Of player2) and enemy
         self.collisions_bomb2 = None
+        # Creating List that contains elements in the collision between bombs(Of player2) and blocks
         self.collisions_bomb_block2 = None
         self.collisions_bomb_player2 = None
 
@@ -182,7 +209,6 @@ class Game:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_m:
                 self.player2.drop_bomb()
 
-
         if pygame.key.get_pressed()[pygame.K_w]:
             self.player1.move(vector(0, -1), 0)
         elif pygame.key.get_pressed()[pygame.K_s]:
@@ -205,7 +231,7 @@ class Game:
         else:
             self.player2.move(vector(0, 0), 0)
 
-        self.bool1 = False
+        self.is_player1_blocked = False
         for wall in self.walls:
             dist_x = abs((wall.x + 1/2) * self.cell_width - self.player1.pix_pos.x)
             dist_y = abs((wall.y + 1/2) * self.cell_height - (self.player1.pix_pos.y + 20))
@@ -213,13 +239,13 @@ class Game:
             if dist_x < self.cell_width*3/5 and dist_y < self.cell_height*3/5:
                 self.player1.ban_direction()
                 self.player1.blocked = True
-                self.bool1 = True
+                self.is_player1_blocked = True
 
-        if not self.bool1:
+        if not self.is_player1_blocked:
             self.player1.blocked = False
             self.player1.banned_direction = vector(1, 1)
 
-        self.bool2 = False
+        self.is_player2_blocked = False
         for wall in self.walls:
             dist_x = abs((wall.x + 1 / 2) * self.cell_width - self.player2.pix_pos.x)
             dist_y = abs((wall.y + 1 / 2) * self.cell_height - (self.player2.pix_pos.y + 20))
@@ -227,9 +253,9 @@ class Game:
             if dist_x < self.cell_width * 3 / 5 and dist_y < self.cell_height * 3 / 5:
                 self.player2.ban_direction()
                 self.player2.blocked = True
-                self.bool2 = True
+                self.is_player2_blocked = True
 
-        if not self.bool2:
+        if not self.is_player2_blocked:
             self.player2.blocked = False
             self.player2.banned_direction = vector(1, 1)
 
@@ -252,47 +278,29 @@ class Game:
             self.all_sprites.remove(self.player2)
             self.player2.destroy()
 
-        self.collisions1 = pygame.sprite.spritecollide(self.player1,
-                                                       self.collision_sprites, False
+        self.collisions1 = pygame.sprite.spritecollide(self.player1, self.collision_sprites, False
                                                        , pygame.sprite.collide_mask)
         if self.player1.bomb.exploded:
-            self.collisions_bomb1 = pygame.sprite.spritecollide(self.player1.bomb,
-                                                                self.collision_sprites_bomb
-                                                                , False
-                                                                , pygame.sprite.collide_mask)
-            self.collisions_bomb_player1 = pygame.sprite.spritecollide(self.player1,
-                                                                self.collision_sprites_bomb_player
-                                                                , False
-                                                                , pygame.sprite.collide_mask)
-            self.collisions_bomb_player2 = pygame.sprite.spritecollide(self.player2,
-                                                                self.collision_sprites_bomb_player
-                                                                , False
-                                                                , pygame.sprite.collide_mask)
-        self.collisions_bomb_block1 = pygame.sprite.spritecollide(self.player1.bomb,
-                                                                  self.collision_sprites_bomb_block,
-                                                                  False
-                                                                  , pygame.sprite.collide_mask)
+            self.collisions_bomb1 = pygame.sprite.spritecollide(self.player1.bomb, self.collision_sprites_bomb
+                                                                , False, pygame.sprite.collide_mask)
+            self.collisions_bomb_player1 = pygame.sprite.spritecollide(self.player1, self.collision_sprites_bomb_player
+                                                                       , False, pygame.sprite.collide_mask)
+            self.collisions_bomb_player2 = pygame.sprite.spritecollide(self.player2, self.collision_sprites_bomb_player
+                                                                       , False, pygame.sprite.collide_mask)
+        self.collisions_bomb_block1 = pygame.sprite.spritecollide(self.player1.bomb, self.collision_sprites_bomb_block
+                                                                  , False, pygame.sprite.collide_mask)
 
-        self.collisions2 = pygame.sprite.spritecollide(self.player2,
-                                                       self.collision_sprites, False
-                                                     , pygame.sprite.collide_mask)
+        self.collisions2 = pygame.sprite.spritecollide(self.player2, self.collision_sprites, False
+                                                       , pygame.sprite.collide_mask)
         if self.player2.bomb.exploded:
-            self.collisions_bomb2 = pygame.sprite.spritecollide(self.player2.bomb,
-                                                                self.collision_sprites_bomb
-                                                                , False
-                                                                , pygame.sprite.collide_mask)
-            self.collisions_bomb_player1 = pygame.sprite.spritecollide(self.player1,
-                                                                self.collision_sprites_bomb_player
-                                                                , False
-                                                                , pygame.sprite.collide_mask)
-            self.collisions_bomb_player2 = pygame.sprite.spritecollide(self.player2,
-                                                                self.collision_sprites_bomb_player
-                                                                , False
-                                                                , pygame.sprite.collide_mask)
-        self.collisions_bomb_block2 = pygame.sprite.spritecollide(self.player2.bomb,
-                                                                  self.collision_sprites_bomb_block,
-                                                                  False
-                                                                  , pygame.sprite.collide_mask)
+            self.collisions_bomb2 = pygame.sprite.spritecollide(self.player2.bomb, self.collision_sprites_bomb
+                                                                , False, pygame.sprite.collide_mask)
+            self.collisions_bomb_player1 = pygame.sprite.spritecollide(self.player1, self.collision_sprites_bomb_player
+                                                                       , False, pygame.sprite.collide_mask)
+            self.collisions_bomb_player2 = pygame.sprite.spritecollide(self.player2, self.collision_sprites_bomb_player
+                                                                       , False, pygame.sprite.collide_mask)
+        self.collisions_bomb_block2 = pygame.sprite.spritecollide(self.player2.bomb, self.collision_sprites_bomb_block,
+                                                                  False, pygame.sprite.collide_mask)
         # print(self.collisions1)
         # print(self.collisions_bomb1)
         # print(self.collisions_bomb_block1)
