@@ -15,6 +15,7 @@ class Player(pygame.sprite.Sprite):
         """"""
         pygame.sprite.Sprite.__init__(self)
         self.game = game
+        self.destroyed = False
         self.grid_pos = pos
         self.pix_pos = vector(
             self.grid_pos.x*self.game.cell_width + self.game.cell_width / 2,
@@ -82,3 +83,8 @@ class Player(pygame.sprite.Sprite):
         """"""
         if not self.blocked:
             self.banned_direction = self.direction
+
+    def destroy(self):
+        self.pix_pos = vector(880, 450)
+        self.destroyed = True
+        self.rect.center = self.pix_pos
