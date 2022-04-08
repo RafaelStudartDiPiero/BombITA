@@ -40,7 +40,7 @@ class Bomb(pygame.sprite.Sprite):
                 self.image = self.bomb_images[int(self.index_img)]
                 self.index_img += 3 / self.time_bomb
                 self.rect.center = self.pos
-                if self.time > self.time_bomb/2w:
+                if self.time > self.time_bomb/2:
                     if not self.added_walls and self.dropped:
                         self.game.walls.append(vector(
                             int(self.pos.x/self.game.cell_width),
