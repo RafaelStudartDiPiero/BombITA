@@ -370,14 +370,7 @@ class Game:
         for block in self.blocks:
             if block not in self.collision_sprites_bomb_block and not block.destroyed:
                 block.destroy()
-
-
-
-
-
-
-
-        print(self.clock.get_fps())
+        # print(self.clock.get_fps())
 
     def playing_draw(self):
         """Drawing elements and sprites"""

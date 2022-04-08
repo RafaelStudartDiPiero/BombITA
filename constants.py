@@ -28,7 +28,7 @@ RED = (255, 0, 0)
 PLAYER1_START_POS = vector(2, 1)
 PLAYER2_START_POS = vector(14, 10)
 # Game Constants
-BLOCKS_NUMBER = 20
+BLOCKS_NUMBER = 40
 
 # Enemy Constants
 

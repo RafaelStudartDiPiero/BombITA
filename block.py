@@ -37,6 +37,9 @@ class Block(pygame.sprite.Sprite):
             for wall in self.game.walls:
                 if wall.x == self.grid_pos.x and wall.y == self.grid_pos.y:
                     self.free = False
+            if self.grid_pos == vector(2, 1) or self.grid_pos == vector(3, 1) or self.grid_pos == vector(2, 2) or \
+                    self.grid_pos == vector(14, 11) or self.grid_pos == vector(13, 11) or self.grid_pos == vector(14, 10):
+                self.free = False
 
         self.game.walls.append(self.grid_pos)
         self.rect.center = vector(

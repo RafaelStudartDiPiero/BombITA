@@ -43,7 +43,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.mask = pygame.mask.from_surface(self.image)
         self.must_sort = True
-        self.time_sort = 0
+        # self.time_sort = 0
         self.collision_bool = False
         self.orientation = 0
         self.destroyed = False
@@ -51,11 +51,11 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         """"""
         if not self.destroyed:
-            if self.time_sort < 6*FPS:
-                self.time_sort += 1
-            else:
-                self.time_sort = 0
-                self.must_sort = True
+            # if self.time_sort < 6*FPS:
+            #     self.time_sort += 1
+            # else:
+            #     self.time_sort = 0
+            #     self.must_sort = True
             self.collision()
 
             self.sort_direction()
@@ -78,9 +78,9 @@ class Enemy(pygame.sprite.Sprite):
         possible_directions = [vector(1, 0), vector(-1, 0), vector(0, 1), vector(0, -1)]
         if self.must_sort:
             self.grid_pos = vector(
-                int(self.pix_pos.x/self.game.cell_width),
-                int(self.pix_pos.y/self.game.cell_height))
-
+                int(self.pix_pos.x//self.game.cell_width),
+                int(self.pix_pos.y//self.game.cell_height))
+            print(self.grid_pos)
             for wall in self.game.walls:
                 if wall == vector(self.grid_pos.x+1, self.grid_pos.y):
                     possible_directions.remove(vector(1, 0))
@@ -92,17 +92,27 @@ class Enemy(pygame.sprite.Sprite):
                     possible_directions.remove(vector(0, -1))
 
             self.direction = random.choice(possible_directions)
+            print(possible_directions)
             self.define_orientation()
             self.index_img = self.orientation*3
-            self.time_sort = 0
+            # self.time_sort = 0
             self.must_sort = False
 
     def collision(self):
         """"""
         for wall in self.game.walls:
-            dist_x = abs((wall.x + 1/2)*self.game.cell_width - self.pix_pos.x)
-            dist_y = abs((wall.y + 1/2)*self.game.cell_height - (self.pix_pos.y + 20))
-
+            if self.orientation == 0:
+                dist_x = abs((wall.x + 1/2)*self.game.cell_width - self.pix_pos.x)
+                dist_y = abs((wall.y + 1/2)*self.game.cell_height - (self.pix_pos.y-5))
+            elif self.orientation == 1:
+                dist_x = abs((wall.x + 1 / 2) * self.game.cell_width - (self.pix_pos.x+5))
+                dist_y = abs((wall.y + 1 / 2) * self.game.cell_height - self.pix_pos.y)
+            elif self.orientation == 2:
+                dist_x = abs((wall.x + 1 / 2) * self.game.cell_width - self.pix_pos.x)
+                dist_y = abs((wall.y + 1 / 2) * self.game.cell_height - (self.pix_pos.y+20))
+            elif self.orientation == 3:
+                dist_x = abs((wall.x + 1 / 2) * self.game.cell_width - (self.pix_pos.x-5))
+                dist_y = abs((wall.y + 1 / 2) * self.game.cell_height - self.pix_pos.y)
             if dist_x < self.game.cell_width*3/5 and dist_y < self.game.cell_height*3/5:
                 self.must_sort = True
 
