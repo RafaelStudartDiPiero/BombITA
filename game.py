@@ -39,8 +39,8 @@ class Game:
         self.cell_width = WIDTH//X_CELLS
         self.cell_height = HEIGHT//Y_CELLS
         # Instantiating Players
-        self.player1 = Player(self, PLAYER_START_POS)
-        self.player2 = Player(self, PLAYER_START_POS)
+        self.player1 = Player(self, PLAYER1_START_POS)
+        self.player2 = Player(self, PLAYER2_START_POS)
         # Instantiating Basic Enemy
         self.enemy = Enemy(self, ENEMY_START_POS)
         # Instantiating list of Breakable Blocks
@@ -57,10 +57,12 @@ class Game:
         # Creating a SpriteGroup that will be used to contain all elements that causes GameOver when collide with player
         self.collision_sprites = pygame.sprite.Group()
         self.collision_sprites.add(self.enemy)
-        # Creating a SpriteGroup that will be used to define the interaction between bombs and players
-        self.collision_sprites_bomb_player = pygame.sprite.Group()
-        self.collision_sprites_bomb_player.add(self.player1.bomb)
-        self.collision_sprites_bomb_player.add(self.player2.bomb)
+        # Creating a SpriteGroup that will be used to define the interaction between bomb1 and players
+        self.collision_sprites_bomb1_player = pygame.sprite.Group()
+        self.collision_sprites_bomb1_player.add(self.player1.bomb)
+        # Creating a SpriteGroup that will be used to define the interaction between bomb2 and players
+        self.collision_sprites_bomb2_player = pygame.sprite.Group()
+        self.collision_sprites_bomb2_player.add(self.player2.bomb)
         # Creating a SpriteGroup that will be used to define the interaction between the bomb and the enemy
         self.collision_sprites_bomb = pygame.sprite.Group()
         self.collision_sprites_bomb.add(self.enemy)
@@ -332,17 +334,15 @@ class Game:
             self.collisions_bomb1 = pygame.sprite.spritecollide(self.player1.bomb, self.collision_sprites_bomb
                                                                 , False, pygame.sprite.collide_mask)
             # Checks collisions between Player1 and Bomb1.
-            # @TODO Bug Bomb1 explodes and player in contact with Bomb2 dies
-            self.collisions_bomb_player1 = pygame.sprite.spritecollide(self.player1, self.collision_sprites_bomb_player
+            self.collisions_bomb_player1 = pygame.sprite.spritecollide(self.player1, self.collision_sprites_bomb1_player
                                                                        , False, pygame.sprite.collide_mask)
             # Checks collisions between Player2 and Bomb1.
-            # @TODO Bug Bomb1 explodes and player in contact with Bomb2 dies
-            self.collisions_bomb_player2 = pygame.sprite.spritecollide(self.player2, self.collision_sprites_bomb_player
+            self.collisions_bomb_player2 = pygame.sprite.spritecollide(self.player2, self.collision_sprites_bomb1_player
                                                                        , False, pygame.sprite.collide_mask)
             # Checks collisions between Blocks and Bomb1.
             self.collisions_bomb_block1 = pygame.sprite.spritecollide(self.player1.bomb,
                                                                       self.collision_sprites_bomb_block
-                                                                      , False, pygame.sprite.collide_mask)
+                                                                      , True, pygame.sprite.collide_mask)
 
         # Checks collisions with Player2.
         self.collisions2 = pygame.sprite.spritecollide(self.player2, self.collision_sprites, False
@@ -353,21 +353,30 @@ class Game:
             self.collisions_bomb2 = pygame.sprite.spritecollide(self.player2.bomb, self.collision_sprites_bomb
                                                                 , False, pygame.sprite.collide_mask)
             # Checks collisions between Player1 and Bomb2.
-            # @TODO Bug Bomb2 explodes and player in contact with Bomb1 dies
-            self.collisions_bomb_player1 = pygame.sprite.spritecollide(self.player1, self.collision_sprites_bomb_player
+            self.collisions_bomb_player1 = pygame.sprite.spritecollide(self.player1, self.collision_sprites_bomb2_player
                                                                        , False, pygame.sprite.collide_mask)
             # Checks collisions between Player2 and Bomb2.
-            # @TODO Bug Bomb2 explodes and player in contact with Bomb1 dies
-            self.collisions_bomb_player2 = pygame.sprite.spritecollide(self.player2, self.collision_sprites_bomb_player
+            self.collisions_bomb_player2 = pygame.sprite.spritecollide(self.player2, self.collision_sprites_bomb2_player
                                                                        , False, pygame.sprite.collide_mask)
             # Checks collisions between Blocks and Bomb2.
             self.collisions_bomb_block2 = pygame.sprite.spritecollide(self.player2.bomb,
                                                                       self.collision_sprites_bomb_block,
-                                                                      False, pygame.sprite.collide_mask)
+                                                                      True, pygame.sprite.collide_mask)
         # print(self.collisions1)
         # print(self.collisions2)
         # print(self.collisions_bomb1)
-        # print(self.collisions_bomb_block1)
+        #print(self.collisions_bomb_block1)
+
+        for block in self.blocks:
+            if block not in self.collision_sprites_bomb_block and not block.destroyed:
+                block.destroy()
+
+
+
+
+
+
+
         print(self.clock.get_fps())
 
     def playing_draw(self):

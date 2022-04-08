@@ -42,6 +42,7 @@ class Block(pygame.sprite.Sprite):
         self.rect.center = vector(
             self.grid_pos.x * self.game.cell_width + self.game.cell_width / 2,
             self.grid_pos.y * self.game.cell_height + self.game.cell_height / 2)
+        self.destroyed = False
 
     def update(self):
         pass
@@ -58,5 +59,9 @@ class Block(pygame.sprite.Sprite):
         #     self.grid_pos.x * self.game.cell_width + self.game.cell_width / 2,
         #     self.grid_pos.y * self.game.cell_height + self.game.cell_height / 2)
 
-    def draw(self):
-        pass
+    def destroy(self):
+        self.game.walls.remove(vector(
+            int(self.grid_pos.x),
+            int(self.grid_pos.y)))
+        self.destroyed = True
+

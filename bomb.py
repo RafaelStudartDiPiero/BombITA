@@ -29,7 +29,7 @@ class Bomb(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         #  self.mask = pygame.mask.from_surface(self.image)
         self.dropped = False
-        self.time_bomb = 4*FPS
+        self.time_bomb = 1.2*FPS
         self.exploded = False
         self.added_walls = False
         
