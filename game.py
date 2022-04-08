@@ -365,7 +365,7 @@ class Game:
         # print(self.collisions1)
         # print(self.collisions2)
         # print(self.collisions_bomb1)
-        # print(self.collisions_bomb_block1)
+        print(self.collisions_bomb_block1)
         print(self.clock.get_fps())
 
     def playing_draw(self):
