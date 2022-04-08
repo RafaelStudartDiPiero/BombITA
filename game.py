@@ -88,6 +88,7 @@ class Game:
         self.collisions_bomb2 = None
         # Creating List that contains elements in the collision between bombs(Of player2) and blocks
         self.collisions_bomb_block2 = None
+        # Creating List that contains elements in the collision bombs(Of player2) and the player
         self.collisions_bomb_player2 = None
 
     def run(self):
@@ -139,7 +140,8 @@ class Game:
                     if char == '1':
                         self.walls.append(vector(x, y))
 
-    def write_text(self, window, size, color, font_name, msg, position):
+    @staticmethod
+    def write_text(window, size, color, font_name, msg, position):
         """Generic method that writes messages in the window"""
         font = pygame.font.SysFont(font_name, size)
         text = font.render(msg, False, color)
@@ -362,14 +364,17 @@ class Game:
             self.collisions_bomb_block2 = pygame.sprite.spritecollide(self.player2.bomb,
                                                                       self.collision_sprites_bomb_block,
                                                                       True, pygame.sprite.collide_mask)
-        # print(self.collisions1)
-        # print(self.collisions2)
-        # print(self.collisions_bomb1)
-        #print(self.collisions_bomb_block1)
-
+        # Destroys blocks if a collision happened.
         for block in self.blocks:
             if block not in self.collision_sprites_bomb_block and not block.destroyed:
                 block.destroy()
+
+        # Useful Prints for Testing
+
+        # print(self.collisions1)
+        # print(self.collisions2)
+        # print(self.collisions_bomb1)
+        # print(self.collisions_bomb_block1)
         # print(self.clock.get_fps())
 
     def playing_draw(self):
