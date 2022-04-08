@@ -342,7 +342,7 @@ class Game:
             # Checks collisions between Blocks and Bomb1.
             self.collisions_bomb_block1 = pygame.sprite.spritecollide(self.player1.bomb,
                                                                       self.collision_sprites_bomb_block
-                                                                      , False, pygame.sprite.collide_mask)
+                                                                      , True, pygame.sprite.collide_mask)
 
         # Checks collisions with Player2.
         self.collisions2 = pygame.sprite.spritecollide(self.player2, self.collision_sprites, False
@@ -361,11 +361,22 @@ class Game:
             # Checks collisions between Blocks and Bomb2.
             self.collisions_bomb_block2 = pygame.sprite.spritecollide(self.player2.bomb,
                                                                       self.collision_sprites_bomb_block,
-                                                                      False, pygame.sprite.collide_mask)
+                                                                      True, pygame.sprite.collide_mask)
         # print(self.collisions1)
         # print(self.collisions2)
         # print(self.collisions_bomb1)
-        print(self.collisions_bomb_block1)
+        #print(self.collisions_bomb_block1)
+
+        for block in self.blocks:
+            if block not in self.collision_sprites_bomb_block and not block.destroyed:
+                block.destroy()
+
+
+
+
+
+
+
         print(self.clock.get_fps())
 
     def playing_draw(self):
