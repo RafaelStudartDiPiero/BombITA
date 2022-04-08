@@ -25,8 +25,8 @@ GREY = (190, 190, 190)
 RED = (255, 0, 0)
 
 # Player Constants
-PLAYER_START_POS = vector(2, 1)
-
+PLAYER1_START_POS = vector(2, 1)
+PLAYER2_START_POS = vector(14, 10)
 # Game Constants
 BLOCKS_NUMBER = 10
 
