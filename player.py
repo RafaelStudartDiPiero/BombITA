@@ -25,8 +25,7 @@ class Player(pygame.sprite.Sprite):
         self.change_direction = False
         self.orientation = 0
         self.base_rect = None
-        self.banned_direction = vector(1, 1)
-        self.blocked = False
+        self.banned_directions = [vector(1, 1)]
 
         # Instantiating the bomb for the Player
         self.bomb = Bomb(self.game)
@@ -49,7 +48,7 @@ class Player(pygame.sprite.Sprite):
     def update(self):
         """Updates the state of player"""
         # Moves in a unbanned direction
-        if self.direction != self.banned_direction:
+        if self.direction not in self.banned_directions:
             self.pix_pos += self.direction*2
 
         # Changes sprite image based in change in direction
@@ -91,13 +90,25 @@ class Player(pygame.sprite.Sprite):
             self.bomb.pos.x = self.pix_pos.x
             self.bomb.pos.y = self.pix_pos.y
 
-    def ban_direction(self):
-        """Bans a direction of the movement"""
-        if not self.blocked:
-            self.banned_direction = self.direction
-
     def destroy(self):
         """Destroys the player, removing it from the screen."""
         self.pix_pos = vector(880, 450)
         self.destroyed = True
         self.rect.center = self.pix_pos
+
+    def collisions(self):
+        """Checks if the player had collision with walls and blocks movement in that direction"""
+        self.banned_directions = [vector(1, 1)]
+        for wall in self.game.walls:
+            dist_x = abs((wall.x + 1/2) * self.game.cell_width - self.pix_pos.x)
+            dist_y = abs((wall.y + 1/2) * self.game.cell_height - (self.pix_pos.y + 20))
+
+            if dist_x < self.game.cell_width*3/5 and dist_y < self.game.cell_height*3/5:
+                if ((wall.x + 1/2) * self.game.cell_width) - self.pix_pos.x > 0 and dist_y < self.game.cell_height*1/2:
+                    self.banned_directions.append(vector(1, 0))
+                if ((wall.x + 1/2) * self.game.cell_width) - self.pix_pos.x < 0 and dist_y < self.game.cell_height*1/2:
+                    self.banned_directions.append(vector(-1, 0))
+                if (wall.y + 1/2) * self.game.cell_height - (self.pix_pos.y + 20) > 0 and dist_x < self.game.cell_width*1/2:
+                    self.banned_directions.append(vector(0, 1))
+                if (wall.y + 1/2) * self.game.cell_height - (self.pix_pos.y + 20) < 0 and dist_x < self.game.cell_width*1/2:
+                    self.banned_directions.append(vector(0, -1))

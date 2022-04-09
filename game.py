@@ -70,8 +70,6 @@ class Game:
         self.collision_sprites_bomb_block = pygame.sprite.Group()
         for i in range(len(self.blocks)):
             self.collision_sprites_bomb_block.add(self.blocks[i])
-        # Creating a Bool Variable to Check if a Player1 needs to be Blocked
-        self.is_player1_blocked = False
         # Creating List that contains elements that collide with the player1 at any given moment
         self.collisions1 = None
         # Creating List that contains elements in the collision between bombs(Of player1) and enemy
@@ -80,8 +78,6 @@ class Game:
         self.collisions_bomb_block1 = None
         # Creating List that contains elements in the collision bombs(Of player1) and the player
         self.collisions_bomb_player1 = None
-        # Creating a Bool Variable to Check if a Player2 needs to be Blocked
-        self.is_player2_blocked = False
         # Creating List that contains elements that collide with the player2 at any given moment
         self.collisions2 = None
         # Creating List that contains elements in the collision between bombs(Of player2) and enemy
@@ -254,36 +250,14 @@ class Game:
             if not self.player2.destroyed:
                 self.player2.destroy()
 
-        # Checks if Player1 has a banned direction and must be blocked
-        self.is_player1_blocked = False
-        for wall in self.walls:
-            dist_x = abs((wall.x + 1/2) * self.cell_width - self.player1.pix_pos.x)
-            dist_y = abs((wall.y + 1/2) * self.cell_height - (self.player1.pix_pos.y + 20))
+        # Checks if Player1 has a banned directions and must be blocked, if it is not destroyed
+        if not self.player1.destroyed:
+            self.player1.collisions()
+            print(self.player1.banned_directions)
 
-            if dist_x < self.cell_width*3/5 and dist_y < self.cell_height*3/5:
-                self.player1.ban_direction()
-                self.player1.blocked = True
-                self.is_player1_blocked = True
-
-        if not self.is_player1_blocked:
-            self.player1.blocked = False
-            self.player1.banned_direction = vector(1, 1)
-
-        # Checks if Player2 has a banned direction and must be blocked, if it is not destroyed
+        # Checks if Player2 has a banned directions and must be blocked, if it is not destroyed
         if not self.player2.destroyed:
-            self.is_player2_blocked = False
-            for wall in self.walls:
-                dist_x = abs((wall.x + 1 / 2) * self.cell_width - self.player2.pix_pos.x)
-                dist_y = abs((wall.y + 1 / 2) * self.cell_height - (self.player2.pix_pos.y + 20))
-
-                if dist_x < self.cell_width * 3 / 5 and dist_y < self.cell_height * 3 / 5:
-                    self.player2.ban_direction()
-                    self.player2.blocked = True
-                    self.is_player2_blocked = True
-
-            if not self.is_player2_blocked:
-                self.player2.blocked = False
-                self.player2.banned_direction = vector(1, 1)
+            self.player2.collisions()
 
     def playing_update(self):
         """Updates and Checks Conditions of Playing Game State"""
@@ -375,7 +349,7 @@ class Game:
         # print(self.collisions2)
         # print(self.collisions_bomb1)
         # print(self.collisions_bomb_block1)
-        # print(self.clock.get_fps())
+        print(self.clock.get_fps())
 
     def playing_draw(self):
         """Drawing elements and sprites"""
