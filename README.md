@@ -13,7 +13,7 @@ Além disso, ao destruir blocos, existe a chance de ser gerado um _power_up_ que
 Nosso projeto se baseiou no paradigma da Programação Orientada a Objetos, assim dividiu-se os componentes do jogo em classes, definindo as relações entre elas. Em seguida, uma breve explicação das classes:
 
 ## Game:  
-  Representa uma instância do jogo e é formado por diferentes estados, alterando entre eles com base nos acontecimentos do jogo e decisões do jogador. Nessa classe, são definidos os métodos que alteram os modos de jogo e os eventos em cada modo.  
+  Representa uma instância do jogo e é formado por diferentes estados, alternando entre eles com base nos acontecimentos do jogo e decisões do jogador. Nessa classe, são definidos os métodos que alteram os modos de jogo e os eventos em cada modo.  
   
 ## Block:  
   Representa um bloco destrutível, definindo suas propriedades, como posição e chance de existir um powerup, e seu método para ser destruído pela bomba.  
@@ -33,7 +33,7 @@ Nosso projeto se baseiou no paradigma da Programação Orientada a Objetos, assi
 ## SpeedPowerUp:  
   Representa um powerup de velocidade, especificando a sua existência e seus efeitos.
   
-# Conteúdo do Arquivos
+# Conteúdo dos Arquivos
 Pode-se apresentar uma 
 
 # Agradecimentos
