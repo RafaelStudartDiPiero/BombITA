@@ -8,7 +8,7 @@ A mecânica principal do jogo é a utilização das bombas, que podem destruir b
 um cuidado para não se eliminar acidentalmente.  
 Além disso, ao destruir blocos, existe a chance de ser gerado um _power_up_ que aumenta a velocidade do player.
 
-# Arquiterura
+# Arquitetura
 
 
 # Conteúdo do Arquivos  
