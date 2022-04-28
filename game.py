@@ -144,9 +144,11 @@ class Game:
         # Loading the Game Over Background
         self.gameover_background = os.path.join(dir_images, GAME_OVER_BACKGROUND)
         self.gameover_background = pygame.image.load(self.gameover_background).convert()
-        self.gameover_background = pygame.transform.scale(self.gameover_background,
-                                                      (WIDTH, HEIGHT))
+        self.gameover_background = pygame.transform.scale(self.gameover_background, (WIDTH, HEIGHT))
         # Loading the Instructions Background
+        self.instructions_background = os.path.join(dir_images, INSTRUCTIONS_BACKGROUND)
+        self.instructions_background = pygame.image.load(self.instructions_background).convert()
+        self.instructions_background = pygame.transform.scale(self.instructions_background, (WIDTH, HEIGHT))
 
         # Creating list with the grid positions that have walls
         with open(os.path.join(os.getcwd(), 'walls.txt'), 'r') as file:
@@ -450,23 +452,7 @@ class Game:
 
     def instructions_draw(self):
         """Draws elements that make the menu"""
-        single_color = BLACK
-        multi_color = BLACK
-        instructions_color = BLACK
-        # Changes color of selected option
-        if self.menu_options == 0:
-            single_color = WHITE
-        elif self.menu_options == 1:
-            multi_color = WHITE
-        elif self.menu_options == 2:
-            instructions_color = WHITE
         # Puts the background image
-        self.window.blit(self.menu_background, (0, 0))
+        self.window.blit(self.instructions_background, (0, 0))
         # Writes the Options
-        self.write_text(self.window, MENU_TEXT_SIZE, single_color,
-                        MENU_TEXT_FONT, 'Single Player', [150, 230])
-        self.write_text(self.window, MENU_TEXT_SIZE, multi_color,
-                        MENU_TEXT_FONT, 'Multi Player', [150, 280])
-        self.write_text(self.window, MENU_TEXT_SIZE, instructions_color,
-                        MENU_TEXT_FONT, 'Instructions', [150, 330])
         pygame.display.update()

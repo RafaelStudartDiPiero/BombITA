@@ -11,6 +11,7 @@ FPS = 60
 MENU_BACKGROUND = 'menu_background.png'
 SINGLE_BACKGROUND = 'single_background.png'
 GAME_OVER_BACKGROUND = 'game_over_background.png'
+INSTRUCTIONS_BACKGROUND = 'instructions_background.jpg'
 
 # Text Parameters
 MENU_TEXT_SIZE = 35
