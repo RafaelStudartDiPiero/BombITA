@@ -128,6 +128,11 @@ class Game:
         dir_images = os.path.join(os.getcwd(), 'images')
         # Getting the Audio Directory
         self.dir_audios = os.path.join(os.getcwd(), 'audios')
+        # Loading Background music
+        self.background_music = os.path.join(self.dir_audios,"BoxCat Games - Mission.mp3")
+        self.background_music = pygame.mixer.music.load(self.background_music)
+        pygame.mixer.music.play(-1)
+
         # Loading the Menu Background
         self.menu_background = os.path.join(dir_images, MENU_BACKGROUND)
         self.menu_background = pygame.image.load(self.menu_background).convert()
