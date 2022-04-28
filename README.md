@@ -22,5 +22,4 @@ https://www.spriters-resource.com
 
 E as músicas foram retiradas de:  
 
-https://themushroomkingdom.net/media/smw/wav  
 https://freemusicarchive.org/music/BoxCat_Games  
