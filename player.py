@@ -15,6 +15,8 @@ class Player(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.game = game
 
+        self.velocity = 2
+
         # Defining initial values for Attributes
         self.destroyed = False
         self.grid_pos = pos
@@ -49,7 +51,7 @@ class Player(pygame.sprite.Sprite):
         """Updates the state of player"""
         # Moves in a unbanned direction
         if self.direction not in self.banned_directions:
-            self.pix_pos += self.direction*2
+            self.pix_pos += self.direction*self.velocity
 
         # Changes sprite image based in change in direction
         if self.change_direction:

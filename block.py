@@ -2,6 +2,7 @@ import pygame
 from constants import *
 import os
 import random
+from speed import SpeedPowerUp
 
 vector = pygame.math.Vector2
 
@@ -58,6 +59,13 @@ class Block(pygame.sprite.Sprite):
         # Defining the initial state of block
         self.destroyed = False
 
+        #adding a power up
+        self.power_up = SpeedPowerUp(self.game, self.grid_pos)
+        self.sprites_power_up = pygame.sprite.Group()
+        self.sprites_power_up.add(self.power_up)
+        if random.random() > 0.5:
+            self.power_up.exist = 1
+
     def update(self):
         pass
         # while not self.free:
@@ -79,4 +87,10 @@ class Block(pygame.sprite.Sprite):
             int(self.grid_pos.x),
             int(self.grid_pos.y)))
         self.destroyed = True
+        self.power_up.appearance = True
 
+
+    def draw(self):
+        """draw the power up"""
+        if self.destroyed and self.power_up.exist:
+            self.sprites_power_up.draw(self.game.window)
