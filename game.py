@@ -29,6 +29,7 @@ class Game:
         self.playing_background = None
         self.menu_background = None
         self.gameover_background = None
+        self.instructions_background = None
         # Audio Directory
         self.dir_audios = None
         # List of Walls that Player Can't Trespass
@@ -116,6 +117,10 @@ class Game:
                 self.gameover_events()
                 self.gameover_update()
                 self.gameover_draw()
+            if self.state == 'instructions':
+                self.instructions_events()
+                self.instructions_update()
+                self.instructions_draw()
             self.clock.tick(FPS)
         pygame.quit()
         sys.exit()
@@ -143,6 +148,8 @@ class Game:
         self.gameover_background = pygame.image.load(self.gameover_background).convert()
         self.gameover_background = pygame.transform.scale(self.gameover_background,
                                                       (WIDTH, HEIGHT))
+        # Loading the Instructions Background
+
         # Creating list with the grid positions that have walls
         with open(os.path.join(os.getcwd(), 'walls.txt'), 'r') as file:
             for y, line in enumerate(file):
@@ -192,7 +199,7 @@ class Game:
                         self.state = 'playing'
                         self.multiplayer = True
                     elif self.menu_options == 2:
-                        self.state = 'challenge'
+                        self.state = 'instructions'
 
     def menu_update(self):
         """Method that updates the state of the menu"""
@@ -202,14 +209,14 @@ class Game:
         """Draws elements that make the menu"""
         single_color = BLACK
         multi_color = BLACK
-        challenge_color = BLACK
+        instructions_color = BLACK
         # Changes color of selected option
         if self.menu_options == 0:
             single_color = WHITE
         elif self.menu_options == 1:
             multi_color = WHITE
         elif self.menu_options == 2:
-            challenge_color = WHITE
+            instructions_color = WHITE
         # Puts the background image
         self.window.blit(self.menu_background, (0, 0))
         # Writes the Options
@@ -217,8 +224,8 @@ class Game:
                         MENU_TEXT_FONT, 'Single Player', [150, 230])
         self.write_text(self.window, MENU_TEXT_SIZE, multi_color,
                         MENU_TEXT_FONT, 'Multi Player', [150, 280])
-        self.write_text(self.window, MENU_TEXT_SIZE, challenge_color,
-                        MENU_TEXT_FONT, 'Challenge', [150, 330])
+        self.write_text(self.window, MENU_TEXT_SIZE, instructions_color,
+                        MENU_TEXT_FONT, 'Instructions', [150, 330])
         pygame.display.update()
 
 # ------------------------- Playing FUNCTIONS ---------------------------------------
@@ -365,21 +372,18 @@ class Game:
                 self.power_up_group2.add(block.power_up)
                 block.destroy()
 
-        #print(self.collisions_power_up1)
-        #print(self.power_up_group1)
+        # print(self.collisions_power_up1)
+        # print(self.power_up_group1)
         # Destroys power ups if a collision happened.
         for power_up in self.power_ups:
             if power_up not in self.power_up_group1 and power_up.appearance and not power_up.destroyed and power_up.exist and self.collisions_power_up1:
                 power_up.destroy()
-                print('aaaaaa')
                 if self.player1.velocity < 4 :
                     self.player1.velocity *= 1.3
 
             if power_up not in self.power_up_group2 and power_up.appearance and not power_up.destroyed and power_up.exist and self.collisions_power_up2:
                 power_up.destroy()
-                print('bbbbb')
                 if self.player2.velocity < 4 :
-                    print('aaaaaa')
                     self.player2.velocity *= 1.3
 
 
@@ -389,9 +393,8 @@ class Game:
         # print(self.collisions2)
         # print(self.collisions_bomb1)
         # print(self.collisions_bomb_block1)
-        #print(self.collisions_power_up2)
-        #print(self.clock.get_fps())
-
+        # print(self.collisions_power_up2)
+        # print(self.clock.get_fps())
 
     def playing_draw(self):
         """Drawing elements and sprites"""
@@ -402,7 +405,7 @@ class Game:
         self.player1.draw()
         self.player2.draw()
 
-        #Draws power ups
+        # Draws power ups
         for i in range(len(self.blocks)):
             self.blocks[i].draw()
 
@@ -433,4 +436,41 @@ class Game:
         # Write GameOver text
         self.write_text(self.window, MENU_TEXT_SIZE, WHITE,
                         MENU_TEXT_FONT, 'PRESS ANY KEY TO QUIT', [400, 170])
+        pygame.display.update()
+
+# ----------------------------- INSTRUCTIONS FUNCTIONS ------------------------------------------
+
+    def instructions_events(self):
+        """Defines events that can happen in the menu"""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.is_running = False
+            if event.type == pygame.KEYDOWN:
+                self.state = 'menu'
+
+    def instructions_update(self):
+        """Method that updates the state of the menu"""
+        pass
+
+    def instructions_draw(self):
+        """Draws elements that make the menu"""
+        single_color = BLACK
+        multi_color = BLACK
+        instructions_color = BLACK
+        # Changes color of selected option
+        if self.menu_options == 0:
+            single_color = WHITE
+        elif self.menu_options == 1:
+            multi_color = WHITE
+        elif self.menu_options == 2:
+            instructions_color = WHITE
+        # Puts the background image
+        self.window.blit(self.menu_background, (0, 0))
+        # Writes the Options
+        self.write_text(self.window, MENU_TEXT_SIZE, single_color,
+                        MENU_TEXT_FONT, 'Single Player', [150, 230])
+        self.write_text(self.window, MENU_TEXT_SIZE, multi_color,
+                        MENU_TEXT_FONT, 'Multi Player', [150, 280])
+        self.write_text(self.window, MENU_TEXT_SIZE, instructions_color,
+                        MENU_TEXT_FONT, 'Instructions', [150, 330])
         pygame.display.update()
