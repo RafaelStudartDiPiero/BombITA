@@ -43,16 +43,16 @@ Pode-se apresentar uma breve explicação do conteúdo de cada arquivo:
   É a pasta que possui todas as imagens e sprites utilizadas no desenvolvimento do jogo.
   
 ## block.py:
-  Contém a implementação utilizada para os bloco.
+  Contém a implementação utilizada para a classes dos blocos.
   
 ## bomb.py:
-  Contém a implementação utilizada para a bomba.
+  Contém a implementação utilizada para a classe da  bomba.
   
 ## constants.py:
-  Contém as constantes multiplicativas utilizadas ao longo de toda a implementação do projeto.
+  Contém as constantes utilizadas ao longo de toda a implementação do projeto.
   
 ## enemy.py:
-  Contém a implementação utilizada para o inimigo.
+  Contém a implementação utilizada para a classe do inimigo.
   
  ## game.py:
   Contém a implementação utilizada para o jogo propriamente em si.
@@ -61,13 +61,13 @@ Pode-se apresentar uma breve explicação do conteúdo de cada arquivo:
   Contém a chamada de execução do jogo.
   
  ## player.py:
-  Contém a implementação utilizada para a movimentação dos players.
+  Contém a implementação utilizada para a classe dos players.
   
  ## powerup.py:
-  Contém a implementação utilizada para os itens que tornam o player mais forte.
+  Contém a implementação utilizada para a classe abstrata de powerups.
   
  ## speed.py:
-  Contém a implementação utilizada para o aumento de velocidade do player no jogo.
+  Contém a implementação utilizada para a classe do powerup de velocidade.
   
  ## walls.txt
    Apresenta um mapeamento inicial dos blocos intrasponíveis.
