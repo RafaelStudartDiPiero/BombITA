@@ -87,20 +87,18 @@ class Game:
         self.collisions_bomb_block2 = None
         # Creating List that contains elements in the collision bombs(Of player2) and the player
         self.collisions_bomb_player2 = None
-        #Creating List that contains power ups that collide with the player2 at any given moment
+        # Creating List that contains power ups that collide with the player2 at any given moment
         self.collisions_power_up1 = None
         self.collisions_power_up2 = None
 
-
-        #Creating a speed powerup group on the screen
+        # Creating a speed powerup group on the screen
         self.power_up_group1 = pygame.sprite.Group()
         self.power_up_group2 = pygame.sprite.Group()
 
-        #Creating a speed powerup list
+        # Creating a speed powerup list
         self.power_ups = []
         for block in self.blocks:
             self.power_ups.append(block.power_up)
-
 
     def run(self):
         """Defines the Game State and calls its corresponding methods."""
@@ -274,7 +272,7 @@ class Game:
         # Checks if Player1 has a banned directions and must be blocked, if it is not destroyed
         if not self.player1.destroyed:
             self.player1.collisions()
-            #print(self.player1.banned_directions)
+            # print(self.player1.banned_directions)
 
         # Checks if Player2 has a banned directions and must be blocked, if it is not destroyed
         if not self.player2.destroyed:
@@ -326,7 +324,7 @@ class Game:
         self.collisions1 = pygame.sprite.spritecollide(self.player1, self.collision_sprites, False
                                                        , pygame.sprite.collide_mask)
         self.collisions_power_up1 = pygame.sprite.spritecollide(self.player1, self.power_up_group1, True
-                                                       , pygame.sprite.collide_mask)
+                                                                , pygame.sprite.collide_mask)
 
         # Checks multiple collisions with Player1 Bomb when bomb is exploded.
         if self.player1.bomb.exploded:
@@ -378,14 +376,13 @@ class Game:
         for power_up in self.power_ups:
             if power_up not in self.power_up_group1 and power_up.appearance and not power_up.destroyed and power_up.exist and self.collisions_power_up1:
                 power_up.destroy()
-                if self.player1.velocity < 4 :
+                if self.player1.velocity < 4:
                     self.player1.velocity *= 1.3
 
             if power_up not in self.power_up_group2 and power_up.appearance and not power_up.destroyed and power_up.exist and self.collisions_power_up2:
                 power_up.destroy()
-                if self.player2.velocity < 4 :
+                if self.player2.velocity < 4:
                     self.player2.velocity *= 1.3
-
 
         # Useful Prints for Testing
 
@@ -423,7 +420,6 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 self.is_running = False
 
-        pass
 
     def gameover_update(self):
         """Updates elements in GameOver State"""
