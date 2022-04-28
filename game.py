@@ -29,6 +29,7 @@ class Game:
         self.playing_background = None
         self.menu_background = None
         self.gameover_background = None
+        self.background_music = None
         # Audio Directory
         self.dir_audios = None
         # List of Walls that Player Can't Trespass
@@ -90,6 +91,9 @@ class Game:
         self.collisions_power_up1 = None
         self.collisions_power_up2 = None
 
+        #Bool to decide who won
+        self.player_win = 0;
+
 
         #Creating a speed powerup group on the screen
         self.power_up_group1 = pygame.sprite.Group()
@@ -116,6 +120,10 @@ class Game:
                 self.gameover_events()
                 self.gameover_update()
                 self.gameover_draw()
+            if self.state == 'win':
+                self.win_events()
+                self.win_update()
+                self.win_draw()
             self.clock.tick(FPS)
         pygame.quit()
         sys.exit()
@@ -147,6 +155,12 @@ class Game:
         self.gameover_background = os.path.join(dir_images, GAME_OVER_BACKGROUND)
         self.gameover_background = pygame.image.load(self.gameover_background).convert()
         self.gameover_background = pygame.transform.scale(self.gameover_background,
+                                                      (WIDTH, HEIGHT))
+
+        # Loading the Win Window Background
+        self.win_background = os.path.join(dir_images, "win_background.png")
+        self.win_background = pygame.image.load(self.win_background).convert()
+        self.win_background = pygame.transform.scale(self.win_background,
                                                       (WIDTH, HEIGHT))
         # Creating list with the grid positions that have walls
         with open(os.path.join(os.getcwd(), 'walls.txt'), 'r') as file:
@@ -305,6 +319,12 @@ class Game:
         if self.collisions_bomb1 or self.collisions_bomb2:
             self.all_sprites.remove(self.enemy)
             self.enemy.destroy()
+            if self.player1.destroyed:
+                self.state = 'win'
+                self.player_win = 0
+            if self.player2.destroyed:
+                self.state = 'win'
+                self.player_win = 1
         # Checks if the player1 has collided with the bomb of player 1 or 2
         if self.collisions_bomb_player1:
             self.all_sprites.remove(self.player1)
@@ -312,6 +332,10 @@ class Game:
             # If player 1 is destroyed and player 2 is already destroyed, the game ends.
             if self.player2.destroyed:
                 self.state = 'gameover'
+            # If player 1 is destroyed and enemy is already destroyed, player 2 wins.
+            if self.enemy.destroyed:
+                self.state = 'win'
+                self.player_win = 0
         # Checks if the player2 has collided with the bomb of player 1 or 2
         if self.collisions_bomb_player2:
             self.all_sprites.remove(self.player2)
@@ -319,6 +343,10 @@ class Game:
             # If player 2 is destroyed and player 1 is already destroyed, the game ends.
             if self.player1.destroyed:
                 self.state = 'gameover'
+            # If player 2 is destroyed and enemy is already destroyed, player 1 wins.
+            if self.enemy.destroyed:
+                self.state = 'win'
+                self.player_win = 1
 
         # Checks collisions with Player1.
         self.collisions1 = pygame.sprite.spritecollide(self.player1, self.collision_sprites, False
@@ -423,7 +451,8 @@ class Game:
             if event.type == pygame.QUIT:
                 self.is_running = False
             if event.type == pygame.KEYDOWN:
-                self.is_running = False
+                if event.key == pygame.K_SPACE:
+                    self.is_running = False
 
         pass
 
@@ -437,5 +466,35 @@ class Game:
         self.window.blit(self.gameover_background, (0, 0))
         # Write GameOver text
         self.write_text(self.window, MENU_TEXT_SIZE, WHITE,
-                        MENU_TEXT_FONT, 'PRESS ANY KEY TO QUIT', [400, 170])
+                        MENU_TEXT_FONT, 'PRESS SPACE TO QUIT', [400, 170])
+        pygame.display.update()
+
+        # ---------------------------- GAME OVER FUNCTIONS ---------------------------------------
+
+    def win_events(self):
+        """Defines events that happens during win"""
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                self.is_running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    self.is_running = False
+
+
+    def win_update(self):
+        """Updates elements in win State"""
+        pass
+
+    def win_draw(self):
+        """Draws Elements in the Window"""
+        # Draws Background
+        self.window.blit(self.win_background, (0, 0))
+        # Write win text
+        if self.player_win:
+            self.write_text(self.window, MENU_TEXT_SIZE, WHITE,
+                        MENU_TEXT_FONT, 'Player1 won', [400, 170])
+        else:
+            self.write_text(self.window, MENU_TEXT_SIZE, WHITE,
+                            MENU_TEXT_FONT, 'Player2 won', [400, 170])
+
         pygame.display.update()
