@@ -33,8 +33,8 @@ Nosso projeto se baseiou no paradigma da Programação Orientada a Objetos, assi
 ## SpeedPowerUp:  
   Representa um powerup de velocidade, especificando a sua existência e seus efeitos.
   
-# Conteúdo do Arquivos  
-
+# Conteúdo do Arquivos
+Pode-se apresentar uma 
 
 # Agradecimentos
 
