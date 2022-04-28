@@ -34,7 +34,45 @@ Nosso projeto se baseiou no paradigma da Programação Orientada a Objetos, assi
   Representa um powerup de velocidade, especificando a sua existência e seus efeitos.
   
 # Conteúdo dos Arquivos
-Pode-se apresentar uma 
+Pode-se apresentar uma breve explicação do conteúdo de cada arquivo:
+
+## Audios:
+  É a pasta que possui todos os audios utilizados no desenvolvimento do jogo.
+  
+## Images:
+  É a pasta que possui todas as imagens e sprites utilizadas no desenvolvimento do jogo.
+  
+## block.py:
+  Contém a implementação utilizada para os bloco.
+  
+## bomb.py:
+  Contém a implementação utilizada para a bomba.
+  
+## constants.py:
+  Contém as constantes multiplicativas utilizadas ao longo de toda a implementação do projeto.
+  
+## enemy.py:
+  Contém a implementação utilizada para o inimigo.
+  
+ ## game.py:
+  Contém a implementação utilizada para o jogo propriamente em si.
+  
+ ## main.py:
+  Contém a chamada de execução do jogo.
+  
+ ## player.py:
+  Contém a implementação utilizada para a movimentação dos players.
+  
+ ## powerup.py:
+  Contém a implementação utilizada para os itens que tornam o player mais forte.
+  
+ ## speed.py:
+  Contém a implementação utilizada para o aumento de velocidade do player no jogo.
+  
+ ## walls.txt
+   Apresenta um mapeamento inicial dos blocos intrasponíveis.
+  
+
 
 # Agradecimentos
 
